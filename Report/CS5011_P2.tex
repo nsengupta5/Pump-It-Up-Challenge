@@ -1,0 +1,64 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
+\usepackage{listings}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage{pdfpages}
+\usepackage{float}
+\usepackage{soul}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage[section]{placeins}
+\usepackage[
+backend=biber,
+sorting=none]{biblatex}
+
+\graphicspath{ {./img/} }
+
+\addbibresource{bibliography.bib}
+
+\NewDocumentCommand{\codeword}{v}{%
+\texttt{\textcolor{black}{#1}}%
+}
+
+\title{CS5011: P2 - Machine Learning}
+\author{190018035}
+\date{March 13th 2024}
+
+% PAGE LIMIT: 10, including text, figures, tables
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+% Include checklist of parts completed & extension
+
+\subsection{Project Achievements}
+\begin{itemize}
+    \item{Part 1: Attempted and Fully Working}
+    \item{Part 2: Attempted and Fully Working}
+\end{itemize}
+
+\subsection{Usage Instructions}
+
+\section{Design and Implementation}
+% Explain the various preprocessing steps you have done.
+% Which design decisions (parameters of preprocessing methods, hyper-parameters of ma-
+% chine learning models) you have to make while implementing this part? How did you
+% set them? To make it simple, you can start your analysis with the default setting, and
+% investigate a few hyper-parameters of one or two machine learning models of your choice
+% afterwards.
+
+\section{Evaluation}
+% Analyse the results of your experiments based on the provided training set (via cross-
+% validation mechanism). Summarise the key insights and findings of your analysis.
+
+\section{Conclusion}
+
+\printbibliography
+
+\end{document}
