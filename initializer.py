@@ -40,15 +40,14 @@ returns:
     cat_encoder: The categorical encoder to use
 """
 def get_cat_encoder(cat_preprocessing):
-    match cat_preprocessing:
-        case "OneHotEncoder":
-            return OneHotEncoder()
-        case "OrdinalEncoder":
-            return OrdinalEncoder()
-        case "TargetEncoder":
-            return TargetEncoder()
-        case _:
-            raise ValueError(f"Invalid categorical preprocessing method: {cat_preprocessing}")
+    if cat_preprocessing == "OneHotEncoder":
+        return OneHotEncoder()
+    elif cat_preprocessing == "OrdinalEncoder":
+        return OrdinalEncoder()
+    elif cat_preprocessing == "TargetEncoder":
+        return TargetEncoder()
+    else:
+        raise ValueError(f"Invalid categorical preprocessing method: {cat_preprocessing}")
 
 """
 Get the encoder based on the preprocessing method
@@ -60,13 +59,12 @@ returns:
     num_encoder: The numerical encoder to use
 """
 def get_num_encoder(num_preprocessing):
-    match num_preprocessing:
-        case "None":
-            return None
-        case "StandardScaler":
-            return StandardScaler()
-        case _:
-            raise ValueError(f"Invalid numerical preprocessing method: {num_preprocessing}")
+    if num_preprocessing == "None":
+        return None
+    elif num_preprocessing == "StandardScaler":
+        return StandardScaler()
+    else:
+        raise ValueError(f"Invalid numerical preprocessing method: {num_preprocessing}")
 
 """
 Get the encoder based on the preprocessing method
@@ -94,19 +92,18 @@ returns:
     model: The model to use for prediction
 """
 def get_model(model_type):
-    match model_type:
-        case "LogisticRegression":
-            return LogisticRegression()
-        case "RandomForestClassifier":
-            return RandomForestClassifier()
-        case "GradientBoostingClassifier":
-            return GradientBoostingClassifier()
-        case "HistGradientBoostingClassifier":
-            return HistGradientBoostingClassifier()
-        case "MLPClassifier":
-            return MLPClassifier()
-        case _:
-            raise ValueError(f"Invalid model type: {model_type}")
+    if model_type == "LogisticRegression":
+        return LogisticRegression()
+    elif model_type == "RandomForestClassifier":
+        return RandomForestClassifier()
+    elif model_type == "GradientBoostingClassifier":
+        return GradientBoostingClassifier()
+    elif model_type == "HistGradientBoostingClassifier":
+        return HistGradientBoostingClassifier()
+    elif model_type == "MLPClassifier":
+        return MLPClassifier()
+    else:
+        raise ValueError(f"Invalid model type: {model_type}")
 
 """
 Write the predictions to the output file
