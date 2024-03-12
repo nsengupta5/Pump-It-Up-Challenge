@@ -41,7 +41,7 @@ returns:
 """
 def get_cat_encoder(cat_preprocessing):
     if cat_preprocessing == "OneHotEncoder":
-        return OneHotEncoder()
+        return OneHotEncoder(handle_unknown="ignore")
     elif cat_preprocessing == "OrdinalEncoder":
         return OrdinalEncoder()
     elif cat_preprocessing == "TargetEncoder":

@@ -1,10 +1,7 @@
-import numpy as np
 import pandas as pd
 import logging
 import initializer as init
-from cleaner import clean_data
-from sklearn.pipeline import make_pipeline
-from sklearn.model_selection import cross_val_score, StratifiedKFold
+from data_exploration import explore_data
 
 SEED = 42
 
@@ -51,19 +48,19 @@ def main():
                                          args.train_labels_file, 
                                          args.test_input_file)
 
-    x_train, x_test = clean_data(x_train, x_test)
+    explore_data(x_train, y_train)
+    # x_train, x_test = clean_data(x_train, x_test)
 
-    # explore_data(x_train, y_train)
-    column_transformer = init.get_column_transformer(x_train, 
-                                                     args.categorical_preprocessing,
-                                                     args.numerical_preprocessing)
+    # column_transformer = init.get_column_transformer(x_train, 
+    #                                                  args.categorical_preprocessing,
+    #                                                  args.numerical_preprocessing)
 
-    model = init.get_model(args.model_type)
-    pipeline = make_pipeline(column_transformer, model)
+    # model = init.get_model(args.model_type)
+    # pipeline = make_pipeline(column_transformer, model)
 
-    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
-    scores = cross_val_score(pipeline, x_train, y_train["status_group"], cv=skf, scoring='accuracy')
-    print(f"Cross-validated accuracy: {np.mean(scores)} Â± {np.std(scores)}")
+    # skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
+    # scores = cross_val_score(pipeline, x_train, y_train["status_group"], cv=skf, scoring='accuracy')
+    # print(f"Cross-validated accuracy: {np.mean(scores)} Â± {np.std(scores)}")
 
 if __name__ == "__main__":
     main()
