@@ -1,17 +1,12 @@
-import argparse
-from enum import Enum
+import numpy as np
 import pandas as pd
 import logging
-from data_exploration import explore_data
+import initializer as init
+from cleaner import clean_data
+from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import cross_val_score, StratifiedKFold
 
 SEED = 42
-Model = Enum('Model', ['LogisticRegression', 'RandomForestClassifier', 
-                       'GradientBoostingClassifier', 'HistGradientBoostingClassifier', 
-                       'MLPClassifier'])
-
-NumPreprocessing = Enum('NumPreprocessing', ['None', 'StandardScaler'])
-CatPreprocessing = Enum('CatPreprocessing', ['OneHotEncoder', 'OrdinalEncoder', 
-                                             'TargetEncoder'])
 
 """
 Read the data from the input files
@@ -37,66 +32,38 @@ def read_data(input_file, labels_file, test_file):
     return x_train, y_train, x_test
 
 """
-Get the arguments from the command line
+Write the predictions to the output file following the submission format
 
-returns:
-    args: The arguments from the command line
+args:
+    output_file: The file to save the test predictions
+    predictions: The predictions to save
 """
-def get_args():
-    parser = argparse.ArgumentParser(description="Predicting the status of a water pump")
-
-    # Define the arguments
-    parser.add_argument(
-        "train_input_file",
-        type=str,
-        help="The file containing the training data",
-    )
-    parser.add_argument(
-        "train_labels_file",
-        type=str,
-        help="The file containing the training labels",
-    )
-    parser.add_argument(
-        "test_input_file",
-        type=str,
-        help="The file containing the test data",
-    )
-    # parser.add_argument(
-    #     "numerical-preprocessing",
-    #     type=str,
-    #     choices=["None", "StandardScaler"],
-    #     help="The type of scaling method to use for numerical features",
-    # )
-    # parser.add_argument(
-    #     "categorical-preprocessing",
-    #     type=str,
-    #     choices=["OneHotEncoder", "OrdinalEncoder", "TargetEncoder"],
-    #     help="The type of encoding method to use for categorical features",
-    # )
-    # parser.add_argument(
-    #     "model-type",
-    #     type=str,
-    #     choices=["LogisticRegression", "RandomForestClassifier", 
-    #              "GradientBoostingClassifier", "HistGradientBoostingClassifier", 
-    #              "MLPClassifier"],
-    #     help="The type of model to use for prediction",
-    # )
-    # parser.add_argument(
-    #     "test-prediction-output-file",
-    #     type=str,
-    #     help="The file to save the test predictions. Must conform to the submission format",
-    #     default="data/test_predictions.csv"
-    # )
-
-    return parser.parse_args()
+def write_predictions(output_file, predictions):
+    logging.info(f"Writing the predictions to {output_file}")
+    predictions.to_csv(output_file, index=False)
+    logging.info("Predictions written successfully")
 
 def main():
     logging.basicConfig(level=logging.INFO)
-    args = get_args()
+    args = init.get_args()
+
     x_train, y_train, x_test = read_data(args.train_input_file, 
                                          args.train_labels_file, 
                                          args.test_input_file)
-    explore_data(x_train, y_train)
+
+    x_train, x_test = clean_data(x_train, x_test)
+
+    # explore_data(x_train, y_train)
+    column_transformer = init.get_column_transformer(x_train, 
+                                                     args.categorical_preprocessing,
+                                                     args.numerical_preprocessing)
+
+    model = init.get_model(args.model_type)
+    pipeline = make_pipeline(column_transformer, model)
+
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
+    scores = cross_val_score(pipeline, x_train, y_train["status_group"], cv=skf, scoring='accuracy')
+    print(f"Cross-validated accuracy: {np.mean(scores)} Â± {np.std(scores)}")
 
 if __name__ == "__main__":
     main()
