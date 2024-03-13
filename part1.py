@@ -1,6 +1,10 @@
+import numpy as np
 import pandas as pd
 import logging
 import initializer as init
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.pipeline import make_pipeline
+from cleaner import clean_data
 from data_exploration import explore_data
 
 SEED = 42
@@ -19,13 +23,15 @@ returns:
     x_test: The test data
 """
 def read_data(input_file, labels_file, test_file):
-    logging.info(f"Reading the data from {input_file}, {labels_file}, and {test_file}")
-    
+    print("----------------- READING DATA -----------------")
     x_train = pd.read_csv(input_file)
     y_train = pd.read_csv(labels_file)
     x_test = pd.read_csv(test_file)
 
-    logging.info("Data read successfully")
+    print("Training data shape:", x_train.shape)
+    print("Training labels shape:", y_train.shape)
+    print("Test data shape:", x_test.shape)
+    print("----------------- DATA READ -----------------\n")
     return x_train, y_train, x_test
 
 """
@@ -37,7 +43,7 @@ args:
 """
 def write_predictions(output_file, predictions):
     logging.info(f"Writing the predictions to {output_file}")
-    predictions.to_csv(output_file, index=False)
+    predictions.savetxt(output_file, predictions, delimiter=",")
     logging.info("Predictions written successfully")
 
 def main():
@@ -47,20 +53,30 @@ def main():
     x_train, y_train, x_test = read_data(args.train_input_file, 
                                          args.train_labels_file, 
                                          args.test_input_file)
+    model = init.get_model(args.model_type)
 
-    explore_data(x_train, y_train)
-    # x_train, x_test = clean_data(x_train, x_test)
 
-    # column_transformer = init.get_column_transformer(x_train, 
-    #                                                  args.categorical_preprocessing,
-    #                                                  args.numerical_preprocessing)
+    # explore_data(x_train, y_train)
 
-    # model = init.get_model(args.model_type)
-    # pipeline = make_pipeline(column_transformer, model)
+    x_train, x_test = clean_data(x_train, x_test)
 
-    # skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
-    # scores = cross_val_score(pipeline, x_train, y_train["status_group"], cv=skf, scoring='accuracy')
-    # print(f"Cross-validated accuracy: {np.mean(scores)} Â± {np.std(scores)}")
+    column_transformer = init.get_column_transformer(x_train, 
+                                                     args.categorical_preprocessing,
+                                                     args.numerical_preprocessing)
+
+    train_pipeline = make_pipeline(column_transformer, model)
+
+    print("----------------- TRAINING MODEL -----------------")
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
+    scores = cross_val_score(train_pipeline, x_train, y_train["status_group"], cv=skf, scoring='accuracy')
+    print(f"Cross-validated accuracy: {np.mean(scores)} Â± {np.std(scores)}")
+    print("----------------- MODEL TRAINED -----------------\n")
+
+    print("----------------- MAKING PREDICTIONS -----------------")
+    train_pipeline.fit(x_train, y_train["status_group"])
+    predictions = train_pipeline.predict(x_test)
+    write_predictions(args.test_prediction_output_file, predictions)
+    print("----------------- PREDICTIONS MADE -----------------\n")
 
 if __name__ == "__main__":
     main()

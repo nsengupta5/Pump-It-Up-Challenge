@@ -59,9 +59,7 @@ returns:
     num_encoder: The numerical encoder to use
 """
 def get_num_encoder(num_preprocessing):
-    if num_preprocessing == "None":
-        return None
-    elif num_preprocessing == "StandardScaler":
+    if num_preprocessing == "StandardScaler":
         return StandardScaler()
     else:
         raise ValueError(f"Invalid numerical preprocessing method: {num_preprocessing}")
