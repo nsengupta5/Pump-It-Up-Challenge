@@ -43,7 +43,7 @@ args:
 """
 def write_predictions(output_file, predictions):
     logging.info(f"Writing the predictions to {output_file}")
-    predictions.savetxt(output_file, predictions, delimiter=",")
+    np.savetxt(output_file, predictions, delimiter=",")
     logging.info("Predictions written successfully")
 
 def main():
@@ -54,7 +54,6 @@ def main():
                                          args.train_labels_file, 
                                          args.test_input_file)
     model = init.get_model(args.model_type)
-
 
     # explore_data(x_train, y_train)
 
