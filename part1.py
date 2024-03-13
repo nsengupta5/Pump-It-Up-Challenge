@@ -43,7 +43,7 @@ args:
 """
 def write_predictions(output_file, predictions):
     logging.info(f"Writing the predictions to {output_file}")
-    np.savetxt(output_file, predictions, delimiter=",")
+    np.savetxt(output_file, predictions, delimiter=",", fmt="%s")
     logging.info("Predictions written successfully")
 
 def main():

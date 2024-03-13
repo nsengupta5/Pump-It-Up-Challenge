@@ -218,7 +218,7 @@ def fix_formatting_errors(train_data, test_data):
 def limit_high_cardinality(train_data, test_data):
     logging.info("Limiting high cardinality")
 
-    high_cardinality_columns = ["funder", "installer", "ward", "subvillage"]
+    high_cardinality_columns = ["funder", "installer"]
 
     for col in high_cardinality_columns:
 
