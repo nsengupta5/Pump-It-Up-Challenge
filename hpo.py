@@ -1,4 +1,5 @@
 import optuna
+import os
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import make_pipeline
@@ -73,5 +74,8 @@ def get_best_hyperparams(x, y, model, transformer):
     print(study.best_params)
     importances = optuna.importance.get_param_importances(study)
     print(importances)
+    
+    # Move the database to the correct location
+    os.rename(f"{model}_tuning.db", f"data/paramDBs/{model}_tuning.db")
     print("----------------- BEST HYPERPARAMETERS FOUND -----------------\n")
     return study.best_params
