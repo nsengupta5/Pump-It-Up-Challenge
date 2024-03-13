@@ -6,6 +6,7 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.pipeline import make_pipeline
 from cleaner import clean_data
 from data_exploration import explore_data
+from hpo import get_best_hyperparams
 
 SEED = 42
 
@@ -53,7 +54,6 @@ def main():
     x_train, y_train, x_test = read_data(args.train_input_file, 
                                          args.train_labels_file, 
                                          args.test_input_file)
-    model = init.get_model(args.model_type)
 
     # explore_data(x_train, y_train)
 
@@ -62,6 +62,10 @@ def main():
     column_transformer = init.get_column_transformer(x_train, 
                                                      args.categorical_preprocessing,
                                                      args.numerical_preprocessing)
+
+    best_hyperparams = get_best_hyperparams(x_train, y_train["status_group"], args.model_type, column_transformer)
+
+    model = init.get_model(args.model_type)
 
     train_pipeline = make_pipeline(column_transformer, model)
 
@@ -74,6 +78,10 @@ def main():
     print("----------------- MAKING PREDICTIONS -----------------")
     train_pipeline.fit(x_train, y_train["status_group"])
     predictions = train_pipeline.predict(x_test)
+
+    # Append id from test data to the predictions
+    predictions = np.column_stack((x_test["id"], predictions))
+    
     write_predictions(args.test_prediction_output_file, predictions)
     print("----------------- PREDICTIONS MADE -----------------\n")
 
