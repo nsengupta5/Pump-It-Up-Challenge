@@ -31,6 +31,8 @@ def get_column_transformer(train_data, cat_preprocessing, num_preprocessing):
         if num_preprocessing == "StandardScaler":
             num_features = train_data.select_dtypes(include=["int64", "float64"]).columns
             transformers.append(("num", num_encoder, num_features))
+        else:
+            pass
     else:
         scaled_features = ["gps_height", "longitude", "latitude", "population"]
         transformers.append(("num", num_encoder, scaled_features))
@@ -68,6 +70,8 @@ returns:
 def get_num_encoder(num_preprocessing):
     if num_preprocessing == "StandardScaler":
         return StandardScaler()
+    elif num_preprocessing == "None":
+        pass
     else:
         raise ValueError(f"Invalid numerical preprocessing method: {num_preprocessing}")
 

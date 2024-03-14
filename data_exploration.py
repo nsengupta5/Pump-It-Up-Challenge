@@ -3,10 +3,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from scipy.stats import f_oneway, chi2_contingency
+from scipy.stats import chi2_contingency
 from fuzzywuzzy import process
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.feature_selection import SelectKBest
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 from sklearn.svm import SVR
 from sklearn.feature_selection import RFECV
@@ -17,21 +16,21 @@ SIMILARITY_THRESHOLD = 95
 def explore_data(features, labels):
     print_header("EXPLORING DATA", True)
     # explore_basic_stats(features, labels)
-    # explore_categorical_features(features, labels)
+    explore_categorical_features(features, labels)
     explore_numerical_features(features, labels)
     print_header("DATA EXPLORATION COMPLETE", False)
 
 def explore_categorical_features(features, labels):
     cat_features = features.select_dtypes(include=[object])
-    # explore_categorical_stats(cat_features)
+    explore_categorical_stats(cat_features)
     # explore_high_cardinality_categories(cat_features)
-    explore_feature_importance_categories(cat_features, labels)
+    # explore_feature_importance_categories(cat_features, labels)
     # explore_subset_features(cat_features, labels)
 
 def explore_numerical_features(features, labels):
     num_features = features.select_dtypes(include=[np.number])
-    # explore_numerical_stats(num_features)
-    explore_feature_importance_numerical(num_features, labels)
+    explore_numerical_stats(num_features)
+    # explore_feature_importance_numerical(num_features, labels)
     # explore_geographical_data(features, labels)
 
 def explore_basic_stats(features, labels):
