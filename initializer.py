@@ -89,17 +89,17 @@ args:
 returns:
     model: The model to use for prediction
 """
-def get_model(model_type):
+def get_model(model_type, **best_params):
     if model_type == "LogisticRegression":
-        return LogisticRegression()
+        return LogisticRegression(**best_params)
     elif model_type == "RandomForestClassifier":
-        return RandomForestClassifier()
+        return RandomForestClassifier(**best_params)
     elif model_type == "GradientBoostingClassifier":
-        return GradientBoostingClassifier()
+        return GradientBoostingClassifier(**best_params)
     elif model_type == "HistGradientBoostingClassifier":
-        return HistGradientBoostingClassifier()
+        return HistGradientBoostingClassifier(**best_params)
     elif model_type == "MLPClassifier":
-        return MLPClassifier()
+        return MLPClassifier(**best_params)
     else:
         raise ValueError(f"Invalid model type: {model_type}")
 
@@ -143,13 +143,13 @@ def get_args():
     parser.add_argument(
         "numerical_preprocessing",
         type=str,
-        choices=["None", "StandardScaler"],
+        choices=["None", "StandardScaler", "Manual"],
         help="The type of scaling method to use for numerical features",
     )
     parser.add_argument(
         "categorical_preprocessing",
         type=str,
-        choices=["OneHotEncoder", "OrdinalEncoder", "TargetEncoder"],
+        choices=["OneHotEncoder", "OrdinalEncoder", "TargetEncoder", "Manual"],
         help="The type of encoding method to use for categorical features",
     )
     parser.add_argument(

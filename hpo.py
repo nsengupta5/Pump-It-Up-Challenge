@@ -121,6 +121,7 @@ def get_best_hyperparams(x, y, model, transformer):
     x_train = x
     y_train = y
     column_transformer = transformer
+
     study = optuna.create_study(
         direction="maximize",
         study_name=f"{model}_tuning",
@@ -128,23 +129,21 @@ def get_best_hyperparams(x, y, model, transformer):
         load_if_exists=True,
     )
 
-    if model == "RandomForestClassifier":
-        study.optimize(rf_objective, n_trials=TRIALS)
-    elif model == "LogisticRegression":
-        study.optimize(lr_objective, n_trials=TRIALS)
-    elif model == "GradientBoostingClassifier":
-        study.optimize(gb_objective, n_trials=TRIALS)
-    elif model == "HistGradientBoostingClassifier":
-        study.optimize(hist_gb_objective, n_trials=TRIALS)
-    elif model == "MLPClassifier":
-        study.optimize(mlp_objective, n_trials=TRIALS)
-    else:
-        raise ValueError(f"Invalid model type: {model}")
+    # if model == "RandomForestClassifier":
+    #     study.optimize(rf_objective, n_trials=TRIALS)
+    # elif model == "LogisticRegression":
+    #     study.optimize(lr_objective, n_trials=TRIALS)
+    # elif model == "GradientBoostingClassifier":
+    #     study.optimize(gb_objective, n_trials=TRIALS)
+    # elif model == "HistGradientBoostingClassifier":
+    #     study.optimize(hist_gb_objective, n_trials=TRIALS)
+    # elif model == "MLPClassifier":
+    #     study.optimize(mlp_objective, n_trials=TRIALS)
+    # else:
+    #     raise ValueError(f"Invalid model type: {model}")
 
-    print(study.best_params)
-    importances = optuna.importance.get_param_importances(study)
-    print(importances)
-    
+    print(f"Best hyperparameters: {study.best_params}")
+
     # Move the database to the correct location
     print("----------------- BEST HYPERPARAMETERS FOUND -----------------\n")
     return study.best_params

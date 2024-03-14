@@ -63,9 +63,9 @@ def main():
                                                      args.categorical_preprocessing,
                                                      args.numerical_preprocessing)
 
-    best_hyperparams = get_best_hyperparams(x_train, y_train["status_group"], args.model_type, column_transformer)
+    best_params = get_best_hyperparams(x_train, y_train["status_group"], args.model_type, column_transformer)
 
-    model = init.get_model(args.model_type)
+    model = init.get_model(args.model_type, **best_params)
 
     train_pipeline = make_pipeline(column_transformer, model)
 
