@@ -5,7 +5,6 @@ import initializer as init
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.pipeline import make_pipeline
 from cleaner import clean_data
-from data_exploration import explore_data
 from hpo import get_best_hyperparams
 
 SEED = 42
@@ -57,6 +56,7 @@ def main():
 
     # explore_data(x_train, y_train)
 
+    x_test_id = x_test["id"]
     x_train, x_test = clean_data(x_train, x_test)
 
     column_transformer = init.get_column_transformer(x_train, 
@@ -80,7 +80,7 @@ def main():
     predictions = train_pipeline.predict(x_test)
 
     # Append id from test data to the predictions
-    predictions = np.column_stack((x_test["id"], predictions))
+    predictions = np.column_stack((x_test_id, predictions))
     
     write_predictions(args.test_prediction_output_file, predictions)
     print("----------------- PREDICTIONS MADE -----------------\n")
