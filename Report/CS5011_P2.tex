@@ -18,6 +18,12 @@ sorting=none]{biblatex}
 
 \addbibresource{bibliography.bib}
 
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  breaklines=true,
+}
+
 \NewDocumentCommand{\codeword}{v}{%
 \texttt{\textcolor{black}{#1}}%
 }
@@ -36,6 +42,7 @@ sorting=none]{biblatex}
 
 \section{Introduction}
 % Include checklist of parts completed & extension
+For this practical, I was tasked with implementing and evaluating different machine learning models on the Pump It Up: Data Mining the Water Table \cite{DrivenData} dataset. This involved experimenting with different preprocessing steps, hyperparameters, and machine learning models to find the best model to predict the status of water pumps in Tanzania. The checklist below details my achievements in the practical for each of the specified parts.
 
 \subsection{Project Achievements}
 \begin{itemize}
@@ -45,19 +52,50 @@ sorting=none]{biblatex}
 
 \subsection{Usage Instructions}
 
-\section{Design and Implementation}
+To run the script, navigate to the root directory and run the following command:
+
+\begin{lstlisting}[language=bash]
+python3 part1.py <train-input-file> <train-labels-file> <test-input-file> <numerical-preprocessing> <categorical-preprocessing> <model-type> <test-prediction-output-file>
+\end{lstlisting}
+
+\noindent The values for each of the arguments are equivalent to that described in the assignment specification. However, one difference is that the \codeword{<numerical-preprocessing>} and \codeword{<categorical-preprocessing>} arguments now take in a \codeword{Manual} option, which allows features to be preprocessed based on the encoding that are most suitable for the model. 
+
+\section{Part 1}
 % Explain the various preprocessing steps you have done.
 % Which design decisions (parameters of preprocessing methods, hyper-parameters of ma-
 % chine learning models) you have to make while implementing this part? How did you
 % set them? To make it simple, you can start your analysis with the default setting, and
 % investigate a few hyper-parameters of one or two machine learning models of your choice
 % afterwards.
+In this section, I will detail the various preprocessing steps I took to prepare the data for the machine learning models, guided by a deep exploration of the dataset. I will also discuss the design decisions I made while implementing this part, including the parameters of the preprocessing methods and the hyper-parameters of the machine learning models.
 
-\section{Evaluation}
+\subsection{Preprocessing Steps}
+
+\paragraph{Removing Irrelevant Features}
+\paragraph{Removing Single-Value Features}
+\paragraph{Removing Redundant Features}
+\paragraph{Replacing Construction Year with Decades}
+\paragraph{Imputing Missing Values}
+\paragraph{Fixing Formatting Issues}
+\paragraph{Limiting High Cardinality Features}
+\paragraph{Converting Datetime Features}
+
+\subsection{Design Decisions}
+
+\subsection{Evaluation}
+
+\section{Part 2}
 % Analyse the results of your experiments based on the provided training set (via cross-
 % validation mechanism). Summarise the key insights and findings of your analysis.
+For this part of the practical, I utilized Optuna \cite{optuna_2019}, an automated hyper-parameter optimization (HPO) tool to find the best hyper-parameters for each of the models. In this section, I will detail my HPO process and analyze the results of the experiments.
+
+\subsection{Hyper-Parameter Optimization}
+
+\subsection{Evaluation}
 
 \section{Conclusion}
+
+\pagebreak
 
 \printbibliography
 

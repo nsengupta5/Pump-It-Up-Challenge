@@ -5,46 +5,48 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import f_oneway, chi2_contingency
 from fuzzywuzzy import process
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import SelectKBest
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 from sklearn.svm import SVR
-from sklearn.feature_selection import RFE
+from sklearn.feature_selection import RFECV
+from utils import print_header
 
 SIMILARITY_THRESHOLD = 95
 
 def explore_data(features, labels):
-    print("----------------- EXPLORING DATA -----------------")
+    print_header("EXPLORING DATA", True)
     # explore_basic_stats(features, labels)
     # explore_categorical_features(features, labels)
     explore_numerical_features(features, labels)
-    print("----------------- DATA EXPLORATION COMPLETE -----------------\n")
+    print_header("DATA EXPLORATION COMPLETE", False)
 
 def explore_categorical_features(features, labels):
     cat_features = features.select_dtypes(include=[object])
-    explore_categorical_stats(cat_features)
+    # explore_categorical_stats(cat_features)
     # explore_high_cardinality_categories(cat_features)
-    # explore_feature_importance_categories(cat_features, labels)
+    explore_feature_importance_categories(cat_features, labels)
     # explore_subset_features(cat_features, labels)
 
 def explore_numerical_features(features, labels):
     num_features = features.select_dtypes(include=[np.number])
-    explore_numerical_stats(num_features)
+    # explore_numerical_stats(num_features)
     explore_feature_importance_numerical(num_features, labels)
-    explore_geographical_data(features, labels)
+    # explore_geographical_data(features, labels)
 
 def explore_basic_stats(features, labels):
-    print("------- Exploring Basic Stats -------")
+    print_header("Exploring Basic Stats", True)
     # Print the basic stats for the numerical features
     print(features.head())
     print(features.info())
     print(features.describe())
-    print("------- Percentage of Missing Values -------")
+    print_header("Percentage of Missing Values", True)
     missing_percent = features.isnull().mean() * 100
     print(missing_percent)
     explore_labels(labels)
 
 def explore_labels(labels):
-    print("------- Exploring Value Counts for Labels -------")
+    print_header("Exploring Value Counts for Labels", True)
     # Count the aggregate number for each label
     label_counts = labels["status_group"].value_counts()
     print(label_counts)
@@ -79,7 +81,7 @@ def explore_high_cardinality_categories(cat_features):
             json.dump(clusters_json_ready, f)
 
 def explore_categorical_stats(cat_features):
-    print("------- Exploring Value Counts for Categories -------")
+    print_header("Exploring Value Counts for Categories", True)
     # Print the value counts for each categorical feature
     for col in cat_features.columns:
         print(f"------- Exploring Value Counts for {col} -------")
@@ -93,10 +95,10 @@ def explore_categorical_stats(cat_features):
         print()
 
 def explore_numerical_stats(num_features):
-    print("------- Exploring Numerical Data -------")
+    print_header("Exploring Stats for Numerical Data", True)
     # Print the basic stats for the numerical features
     for col in num_features.columns:
-        print(f"------- Exploring Stats for {col} -------")
+        print_header(f"Exploring Stats for {col}", True)
         df = num_features[col][num_features[col] != 0]
         print(df.describe())
         
@@ -105,7 +107,7 @@ def explore_numerical_stats(num_features):
         print()
 
 def explore_geographical_data(features, labels):
-    print("------- Exploring Geographical Data -------")
+    print_header("Exploring Geographical Data", True)
     # Print the basic stats for the numerical features
     df = features[["id", "longitude", "latitude"]]
     df = df[df["longitude"] != 0]
@@ -157,13 +159,11 @@ def explore_geographical_data(features, labels):
     show_corr(full_train, "district_code", "region")
 
 def explore_feature_importance_categories(cat_features, labels):
-    print("------- Exploring Feature Importance for Categories -------")
-    estimator = SVR(kernel="linear")
-    selector = RFE(estimator, n_features_to_select=10, step=1)
+    print_header("Exploring Feature Importance for Categories", True)
+    selector = RFECV(estimator=SVR(kernel="linear"), min_features_to_select=10, step=5, scoring="accuracy")
     
     cat_features_encoded = OneHotEncoder().fit_transform(cat_features)
     labels_encoded = LabelEncoder().fit_transform(labels["status_group"])
-
 
     selector = selector.fit(cat_features_encoded, labels_encoded)
     print(selector.support_)
@@ -171,16 +171,16 @@ def explore_feature_importance_categories(cat_features, labels):
 
 
 def explore_feature_importance_numerical(num_features, labels):
-    print("------- Exploring Feature Importance for Numerical Data -------")
+    print_header("Exploring Feature Importance for Numerical Data", True)
+    selector = RFECV(estimator=RandomForestClassifier(), min_features_to_select=3, step=1, scoring="accuracy")
+    labels_encoded = LabelEncoder().fit_transform(labels["status_group"])
 
-    select_k_best = SelectKBest(score_func=f_oneway, k=10)
-
-    select_k_best.fit(num_features, labels["status_group"])
-    scores = select_k_best.scores_
-    print(scores)
+    selector = selector.fit(num_features, labels_encoded)
+    print(selector.support_)
+    print(selector.ranking_)
 
 def explore_subset_features(features, labels):
-    print("------- Exploring Subset Features -------")
+    print_header("Exploring Subset Features", True)
     df = pd.concat([features, labels], axis=1)
 
     mappings = {
@@ -192,7 +192,7 @@ def explore_subset_features(features, labels):
     }
 
     for general, specific in mappings.items():
-        print(f"------- Exploring Subset Features for {general} -------")
+        print_header(f"Exploring Subset Features for {general}", True)
         print(df[general].value_counts())
         sns.countplot(x=general, hue="status_group", data=df)
         plt.title(f"{general} vs Status Group")
@@ -210,7 +210,7 @@ def explore_subset_features(features, labels):
         print()
 
 def show_corr(df, feature, general):
-    print(f"------- Exploring Correlation for {feature} and {general} -------")
+    print_header(f"Correlation for {feature} and {general}", True)
     contingency_table = pd.crosstab(df[feature], df[general])
     chi2, p, dof, _ = chi2_contingency(contingency_table)
     print(f"Chi2: {chi2}, p: {p:.5f}, dof: {dof}")

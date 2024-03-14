@@ -18,17 +18,24 @@ returns:
     column_transformer: The column transformer to use for preprocessing
 """
 def get_column_transformer(train_data, cat_preprocessing, num_preprocessing):
-    num_features = train_data.select_dtypes(include=["int64", "float64"]).columns
-    cat_features = train_data.select_dtypes(include=["object"]).columns
-
     cat_encoder, num_encoder = get_encoder(cat_preprocessing, num_preprocessing)
+    transformers = []
 
-    return ColumnTransformer(
-        transformers=[
-            ("num", num_encoder, num_features),
-            ("cat", cat_encoder, cat_features),
-        ]
-    )
+    if cat_preprocessing != "Manual":
+        cat_features = train_data.select_dtypes(include=["object"]).columns
+        transformers.append(("cat", cat_encoder, cat_features))
+    else:
+        pass
+
+    if num_preprocessing != "Manual":
+        if num_preprocessing == "StandardScaler":
+            num_features = train_data.select_dtypes(include=["int64", "float64"]).columns
+            transformers.append(("num", num_encoder, num_features))
+    else:
+        scaled_features = ["gps_height", "longitude", "latitude", "population"]
+        transformers.append(("num", num_encoder, scaled_features))
+
+    return ColumnTransformer(transformers)
     
 """
 Get the encoder based on the preprocessing method
