@@ -3,9 +3,7 @@ import pandas as pd
 import numpy as np
 import json
 
-THRESHOLD = 0.95
-
-def clean_data(train_data, test_data):
+def clean_data(train_data, test_data, threshold=0.95):
     print("----------------- CLEANING DATA -----------------")
     train_data, test_data = remove_irrelevant_columns(train_data, test_data)
     train_data, test_data = remove_single_value_columns(train_data, test_data)
@@ -16,7 +14,7 @@ def clean_data(train_data, test_data):
     train_data, test_data = replace_zero_population(train_data, test_data)
     train_data, test_data = replace_zero_district_code(train_data, test_data)
     train_data, test_data = fix_formatting_errors(train_data, test_data)
-    train_data, test_data = limit_high_cardinality(train_data, test_data)
+    train_data, test_data = limit_high_cardinality(train_data, test_data, threshold=threshold)
     train_data, test_data = replace_missing_boolean_values(train_data, test_data)
     train_data, test_data = convert_to_datetime(train_data, test_data)
     print("----------------- DATA CLEANED -----------------\n")
@@ -217,7 +215,7 @@ def fix_formatting_errors(train_data, test_data):
     logging.info("Formatting errors fixed")
     return train_data, test_data
 
-def limit_high_cardinality(train_data, test_data):
+def limit_high_cardinality(train_data, test_data, threshold):
     logging.info("Limiting high cardinality")
 
     high_cardinality_columns = ["funder", "installer", "subvillage", "ward"]
@@ -226,7 +224,7 @@ def limit_high_cardinality(train_data, test_data):
 
         # Find the top categories that cover the 'threshold' percentage of data points
         top_categories = train_data[col].value_counts(normalize=True).cumsum()
-        top_categories = top_categories[top_categories <= THRESHOLD].index.tolist()
+        top_categories = top_categories[top_categories <= threshold].index.tolist()
         
         # Update the train data to only have the top categories and 'Other'
         train_data[col] = np.where(train_data[col].isin(top_categories), train_data[col], 'Other')
