@@ -4,6 +4,7 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier,
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from initializer import get_column_transformer
+from sklearn.preprocessing import FunctionTransformer
 
 SEED = 42
 TRIALS = 100
@@ -42,11 +43,14 @@ def rf_objective(trial):
     return scores.mean()
 
 def lr_objective(trial):
+    num_encoder = trial.suggest_categorical('num_encoder', ['StandardScaler', 'Manual', 'None'])
+    cat_encoder = trial.suggest_categorical('cat_encoder', ['OneHotEncoder', 'OrdinalEncoder', 'TargetEncoder', 'Manual'])
     C = trial.suggest_float('C', 0.1, 10)
     class_weight = trial.suggest_categorical('class_weight', ['balanced', None])
-    solver = trial.suggest_categorical('solver', ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'])
-    max_iter = trial.suggest_int('max_iter', 100, 1000)
+    solver = trial.suggest_categorical('solver', ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga', 'newton-cholesky'])
+    max_iter = trial.suggest_int('max_iter', 100, 2000)
     fit_intercept = trial.suggest_categorical('fit_intercept', [True, False])
+    tol = trial.suggest_float('tol', 1e-5, 1e-1)
 
     clf = LogisticRegression(
         C=C,
@@ -54,9 +58,11 @@ def lr_objective(trial):
         solver=solver,
         max_iter=max_iter,
         fit_intercept=fit_intercept,
+        tol=tol,
         random_state=SEED,
     )
 
+    column_transformer = get_column_transformer(x_train, cat_encoder, num_encoder)
     train_pipeline = make_pipeline(column_transformer, clf)
 
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
@@ -65,6 +71,8 @@ def lr_objective(trial):
     return scores.mean()
 
 def gb_objective(trial):
+    num_encoder = trial.suggest_categorical('num_encoder', ['StandardScaler', 'Manual', 'None'])
+    cat_encoder = trial.suggest_categorical('cat_encoder', ['OneHotEncoder', 'OrdinalEncoder', 'TargetEncoder', 'Manual'])
     n_estimators = trial.suggest_int('n_estimators', 100, 1000)
     learning_rate = trial.suggest_float('learning_rate', 0.01, 0.2)
     max_depth = trial.suggest_int('max_depth', 3, 10)
@@ -84,6 +92,7 @@ def gb_objective(trial):
         random_state=SEED,
     )
 
+    column_transformer = get_column_transformer(x_train, cat_encoder, num_encoder)
     train_pipeline = make_pipeline(column_transformer, clf)
 
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
@@ -92,6 +101,8 @@ def gb_objective(trial):
     return scores.mean()
 
 def hist_gb_objective(trial):
+    num_encoder = trial.suggest_categorical('num_encoder', ['StandardScaler', 'Manual', 'None'])
+    cat_encoder = trial.suggest_categorical('cat_encoder', ['OneHotEncoder', 'OrdinalEncoder', 'TargetEncoder', 'Manual'])
     max_iter = trial.suggest_int('max_iter', 100, 1000)
     learning_rate = trial.suggest_float('learning_rate', 0.01, 0.2)
     max_depth = trial.suggest_int('max_depth', 3, 30)
@@ -109,7 +120,12 @@ def hist_gb_objective(trial):
         random_state=SEED,
     )
 
-    train_pipeline = make_pipeline(column_transformer, clf)
+    handle_sparse_transformer = FunctionTransformer(
+        lambda x: x.toarray() if hasattr(x, "toarray") else x,
+        accept_sparse=True,
+    )
+    column_transformer = get_column_transformer(x_train, cat_encoder, num_encoder)
+    train_pipeline = make_pipeline(column_transformer, handle_sparse_transformer, clf)
 
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
     scores = cross_val_score(train_pipeline, x_train, y_train, cv=skf, scoring="accuracy")
