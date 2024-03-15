@@ -33,18 +33,18 @@ def get_column_transformer(train_data, cat_preprocessing, num_preprocessing):
             "payment_type",
             "quality_group",
             "quantity_group",
-            "waterpoint_type"
+            "waterpoint_type",
+            "lga",
+            "region",
+            "extraction_type_group",
+            "extraction_type_class",
+            "ward"
         ]
         ordinal_features = ["decade"]
         target_features = [
             "funder",
             "installer",
-            "subvillage",
-            "ward",
-            "lga",
-            "region",
-            "extraction_type_group",
-            "extraction_type_class"
+            "subvillage"
         ]
         transformers.append(("one_hot", 
                              OneHotEncoder(handle_unknown="ignore"),
@@ -64,7 +64,7 @@ def get_column_transformer(train_data, cat_preprocessing, num_preprocessing):
             pass
     else:
         scaled_features = ["gps_height", "longitude", "latitude", "population"]
-        transformers.append(("num", num_encoder, scaled_features))
+        transformers.append(("num", StandardScaler(), scaled_features))
 
     return ColumnTransformer(transformers)
     
@@ -84,6 +84,8 @@ def get_cat_encoder(cat_preprocessing):
         return OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
     elif cat_preprocessing == "TargetEncoder":
         return TargetEncoder()
+    elif cat_preprocessing == "Manual":
+        return None
     else:
         raise ValueError(f"Invalid categorical preprocessing method: {cat_preprocessing}")
 
@@ -99,8 +101,8 @@ returns:
 def get_num_encoder(num_preprocessing):
     if num_preprocessing == "StandardScaler":
         return StandardScaler()
-    elif num_preprocessing == "None":
-        pass
+    elif num_preprocessing == "Manual" or num_preprocessing == "None":
+        return None
     else:
         raise ValueError(f"Invalid numerical preprocessing method: {num_preprocessing}")
 

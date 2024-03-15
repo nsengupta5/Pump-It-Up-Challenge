@@ -6,8 +6,8 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.pipeline import make_pipeline
 from cleaner import clean_data
+from hpo import get_best_hyperparams
 from utils import print_header
-from data_exploration import explore_data
 
 SEED = 42
 
@@ -72,9 +72,9 @@ def main():
         accept_sparse=True,
     )
 
-    # best_params = get_best_hyperparams(x_train, y_train["status_group"], args.model_type, column_transformer)
+    best_params = get_best_hyperparams(x_train, y_train["status_group"], args.model_type, column_transformer)
 
-    model = init.get_model(args.model_type, **{})
+    model = init.get_model(args.model_type, **best_params)
 
     train_pipeline = make_pipeline(column_transformer, handle_sparse_transformer, model)
 

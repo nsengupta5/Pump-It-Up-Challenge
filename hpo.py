@@ -129,18 +129,18 @@ def get_best_hyperparams(x, y, model, transformer):
         load_if_exists=True,
     )
 
-    # if model == "RandomForestClassifier":
-    #     study.optimize(rf_objective, n_trials=TRIALS)
-    # elif model == "LogisticRegression":
-    #     study.optimize(lr_objective, n_trials=TRIALS)
-    # elif model == "GradientBoostingClassifier":
-    #     study.optimize(gb_objective, n_trials=TRIALS)
-    # elif model == "HistGradientBoostingClassifier":
-    #     study.optimize(hist_gb_objective, n_trials=TRIALS)
-    # elif model == "MLPClassifier":
-    #     study.optimize(mlp_objective, n_trials=TRIALS)
-    # else:
-    #     raise ValueError(f"Invalid model type: {model}")
+    if model == "RandomForestClassifier":
+        study.optimize(rf_objective, n_trials=TRIALS)
+    elif model == "LogisticRegression":
+        study.optimize(lr_objective, n_trials=TRIALS)
+    elif model == "GradientBoostingClassifier":
+        study.optimize(gb_objective, n_trials=TRIALS)
+    elif model == "HistGradientBoostingClassifier":
+        study.optimize(hist_gb_objective, n_trials=TRIALS)
+    elif model == "MLPClassifier":
+        study.optimize(mlp_objective, n_trials=TRIALS)
+    else:
+        raise ValueError(f"Invalid model type: {model}")
 
     print(f"Best hyperparameters: {study.best_params}")
 
