@@ -135,7 +135,7 @@ def get_model(model_type, **best_params):
     if model_type == "LogisticRegression":
         return LogisticRegression(**best_params)
     elif model_type == "RandomForestClassifier":
-        return RandomForestClassifier(**best_params)
+        return RandomForestClassifier(n_jobs=5, **best_params)
     elif model_type == "GradientBoostingClassifier":
         return GradientBoostingClassifier(**best_params)
     elif model_type == "HistGradientBoostingClassifier":

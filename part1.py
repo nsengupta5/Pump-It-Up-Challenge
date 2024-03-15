@@ -6,6 +6,9 @@ from cleaner import clean_data
 from utils import print_header
 from hpo import get_best_hyperparams
 from data_exploration import explore_data
+from sklearn.preprocessing import FunctionTransformer
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.pipeline import make_pipeline
 
 SEED = 42
 
@@ -72,7 +75,11 @@ def main():
 
     best_params = get_best_hyperparams(x_train, y_train["status_group"], args.model_type)
 
-    # model = init.get_model(args.model_type, **{})
+    # Remove the num_encoder and cat_encoder from the best_params dictionary
+    # best_params.pop("num_encoder")
+    # best_params.pop("cat_encoder")
+
+    # model = init.get_model(args.model_type, **best_params)
 
     # train_pipeline = make_pipeline(column_transformer, handle_sparse_transformer, model)
 

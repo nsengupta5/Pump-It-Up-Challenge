@@ -34,6 +34,7 @@ def rf_objective(trial):
         criterion=criterion,
         max_features=max_features,
         random_state=SEED,
+        n_jobs = 5
     )
 
     train_pipeline = make_pipeline(column_transformer, clf)
