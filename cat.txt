@@ -1,0 +1,8 @@
+------------------------READING DATA------------------------
+Training data shape: (59400, 40)
+Training labels shape: (59400, 2)
+Test data shape: (14850, 40)
+-------------------------DATA READ--------------------------
+
+
+----------------- CLEANING DATA -----------------

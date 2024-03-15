@@ -222,6 +222,8 @@ def limit_high_cardinality(train_data, test_data, threshold):
 
     for col in high_cardinality_columns:
 
+        print(f"{col}: {train_data[col].nunique()} unique values")
+
         # Find the top categories that cover the 'threshold' percentage of data points
         top_categories = train_data[col].value_counts(normalize=True).cumsum()
         top_categories = top_categories[top_categories <= threshold].index.tolist()
@@ -235,6 +237,8 @@ def limit_high_cardinality(train_data, test_data, threshold):
         # Replace missing values with 'Unknown'
         train_data[col] = train_data[col].fillna("Unknown")
         test_data[col] = test_data[col].fillna("Unknown")
+
+        print(f"{col}: {train_data[col].nunique()} unique values")
 
     logging.info("High cardinality limited")
     return train_data, test_data

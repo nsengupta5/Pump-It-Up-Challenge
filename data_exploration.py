@@ -17,7 +17,7 @@ def explore_data(features, labels):
     print_header("EXPLORING DATA", True)
     # explore_basic_stats(features, labels)
     explore_categorical_features(features, labels)
-    # explore_numerical_features(features, labels)
+    explore_numerical_features(features, labels)
     print_header("DATA EXPLORATION COMPLETE", False)
 
 def explore_categorical_features(features, labels):
@@ -187,7 +187,9 @@ def explore_subset_features(features, labels):
         "management_group": ["management"],
         "quality_group": ["water_quality"],
         "source_class": ["source", "source_type"],
-        "waterpoint_type_group": ["waterpoint_type"]
+        "waterpoint_type_group": ["waterpoint_type"],
+        "payment_type": ["payment"],
+        "quantity_group": ["quantity"],
     }
 
     for general, specific in mappings.items():

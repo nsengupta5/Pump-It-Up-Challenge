@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 import logging
 import initializer as init
-from sklearn.preprocessing import FunctionTransformer
 from cleaner import clean_data
 from utils import print_header
 from hpo import get_best_hyperparams
+from data_exploration import explore_data
 
 SEED = 42
 
@@ -59,7 +59,7 @@ def main():
     x_test_id = x_test["id"]
     x_train, x_test = clean_data(x_train, x_test)
 
-    # explore_data(x_train, y_train)
+    explore_data(x_train, y_train)
 
     column_transformer = init.get_column_transformer(x_train, 
                                                      args.categorical_preprocessing,
