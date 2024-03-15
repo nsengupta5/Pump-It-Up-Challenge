@@ -3,6 +3,8 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, HistGradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
+from sklearn.neural_network import MLPClassifier
+
 
 SEED = 42
 TRIALS = 100
@@ -113,7 +115,30 @@ def hist_gb_objective(trial):
     return scores.mean()
 
 def mlp_objective(trial):
-    pass
+    hidden_layer_sizes = trial.suggest_categorical('hidden_layer_sizes', [(100,), (100, 100), (100, 100, 100)])
+    activation = trial.suggest_categorical('activation', ['identity', 'logistic', 'tanh', 'relu'])
+    solver = trial.suggest_categorical('solver', ['lbfgs', 'sgd', 'adam'])
+    alpha = trial.suggest_float('alpha', 0.0001, 0.1)
+    learning_rate = trial.suggest_categorical('learning_rate', ['constant', 'invscaling', 'adaptive'])
+    max_iter = trial.suggest_int('max_iter', 100, 1000)
+
+    clf = MLPClassifier(
+        hidden_layer_sizes=hidden_layer_sizes,
+        activation=activation,
+        solver=solver,
+        alpha=alpha,
+        learning_rate=learning_rate,
+        max_iter=max_iter,
+        random_state=SEED,
+    )
+
+    train_pipeline = make_pipeline(column_transformer, clf)
+
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
+    scores = cross_val_score(train_pipeline, x_train, y_train, cv=skf, scoring="accuracy")
+
+    return scores.mean()
+
 
 def get_best_hyperparams(x, y, model, transformer):
     print("----------------- FINDING BEST HYPERPARAMETERS -----------------")
