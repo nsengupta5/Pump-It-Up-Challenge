@@ -25,7 +25,36 @@ def get_column_transformer(train_data, cat_preprocessing, num_preprocessing):
         cat_features = train_data.select_dtypes(include=["object"]).columns
         transformers.append(("cat", cat_encoder, cat_features))
     else:
-        pass
+        one_hot_features = [
+            "public_meeting", 
+            "permit",
+            "basin",
+            "source_class",
+            "payment_type",
+            "quality_group",
+            "quantity_group",
+            "waterpoint_type"
+        ]
+        ordinal_features = ["decade"]
+        target_features = [
+            "funder",
+            "installer",
+            "subvillage",
+            "ward",
+            "lga",
+            "region",
+            "extraction_type_group",
+            "extraction_type_class"
+        ]
+        transformers.append(("one_hot", 
+                             OneHotEncoder(handle_unknown="ignore"),
+                             one_hot_features))
+        transformers.append(("ordinal",
+                             OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1),
+                             ordinal_features))
+        transformers.append(("target",
+                             TargetEncoder(),
+                             target_features))
 
     if num_preprocessing != "Manual":
         if num_preprocessing == "StandardScaler":
@@ -52,7 +81,7 @@ def get_cat_encoder(cat_preprocessing):
     if cat_preprocessing == "OneHotEncoder":
         return OneHotEncoder(handle_unknown="ignore")
     elif cat_preprocessing == "OrdinalEncoder":
-        return OrdinalEncoder()
+        return OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
     elif cat_preprocessing == "TargetEncoder":
         return TargetEncoder()
     else:

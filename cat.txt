@@ -1,0 +1,327 @@
+------------------------READING DATA------------------------
+Training data shape: (59400, 40)
+Training labels shape: (59400, 2)
+Test data shape: (14850, 40)
+-------------------------DATA READ--------------------------
+
+
+----------------- CLEANING DATA -----------------
+----------------- DATA CLEANED -----------------
+
+-----------------------EXPLORING DATA-----------------------
+-----------Exploring Value Counts for Categories------------
+------- Exploring Value Counts for funder -------
+funder
+government of tanzania    9084
+nan                       3637
+danida                    3114
+Other                     2979
+hesawa                    2202
+                          ... 
+tag                         10
+de                          10
+millenium                   10
+auwasa                      10
+kkkt-dioces ya pare         10
+Name: count, Length: 405, dtype: int64
+Number of categories in funder: 405
+Number of missing values in funder: 0
+
+------- Exploring Value Counts for installer -------
+installer
+dwe}                              17412
+nan                                3655
+Other                              2974
+government                         1907
+hesawa                             1395
+                                  ...  
+dr. matomola                          9
+mzinga a                              9
+victoria                              9
+regional water engineer arusha        9
+idara                                 9
+Name: count, Length: 397, dtype: int64
+Number of categories in installer: 397
+Number of missing values in installer: 0
+
+------- Exploring Value Counts for basin -------
+basin
+Lake Victoria              10248
+Pangani                     8940
+Rufiji                      7976
+Internal                    7785
+Lake Tanganyika             6432
+Wami / Ruvu                 5987
+Lake Nyasa                  5085
+Ruvuma / Southern Coast     4493
+Lake Rukwa                  2454
+Name: count, dtype: int64
+Number of categories in basin: 9
+Number of missing values in basin: 0
+
+------- Exploring Value Counts for subvillage -------
+subvillage
+Other          3323
+Madukani        508
+Shuleni         506
+Majengo         502
+Kati            373
+               ... 
+Nyakonde          1
+Nyakatala B       1
+Tunduu            1
+Mumitelama        1
+Maore Kati        1
+Name: count, Length: 16336, dtype: int64
+Number of categories in subvillage: 16336
+Number of missing values in subvillage: 0
+
+------- Exploring Value Counts for region -------
+region
+Iringa           5294
+Shinyanga        4982
+Mbeya            4639
+Kilimanjaro      4379
+Morogoro         4006
+Arusha           3350
+Kagera           3316
+Mwanza           3102
+Kigoma           2816
+Ruvuma           2640
+Pwani            2635
+Tanga            2547
+Dodoma           2201
+Singida          2093
+Mara             1969
+Tabora           1959
+Rukwa            1808
+Mtwara           1730
+Manyara          1583
+Lindi            1546
+Dar es Salaam     805
+Name: count, dtype: int64
+Number of categories in region: 21
+Number of missing values in region: 0
+
+------- Exploring Value Counts for lga -------
+lga
+Njombe          2503
+Arusha Rural    1252
+Moshi Rural     1251
+Bariadi         1177
+Rungwe          1106
+                ... 
+Moshi Urban       79
+Kigoma Urban      71
+Arusha Urban      63
+Lindi Urban       21
+Nyamagana          1
+Name: count, Length: 125, dtype: int64
+Number of categories in lga: 125
+Number of missing values in lga: 0
+
+------- Exploring Value Counts for ward -------
+ward
+Other          2976
+Igosi           307
+Imalinyi        252
+Siha Kati       232
+Mdandu          231
+               ... 
+Kanyelele        10
+Mangirikiti      10
+Kagoma           10
+Bweni            10
+Kilulu           10
+Name: count, Length: 1578, dtype: int64
+Number of categories in ward: 1578
+Number of missing values in ward: 0
+
+------- Exploring Value Counts for public_meeting -------
+public_meeting
+True     54345
+False     5055
+Name: count, dtype: int64
+Number of categories in public_meeting: 2
+Number of missing values in public_meeting: 0
+
+------- Exploring Value Counts for permit -------
+permit
+True     41908
+False    17492
+Name: count, dtype: int64
+Number of categories in permit: 2
+Number of missing values in permit: 0
+
+------- Exploring Value Counts for extraction_type_group -------
+extraction_type_group
+gravity            26780
+nira/tanira         8154
+other               6430
+submersible         6179
+swn 80              3670
+mono                2865
+india mark ii       2400
+afridev             1770
+rope pump            451
+other handpump       364
+other motorpump      122
+wind-powered         117
+india mark iii        98
+Name: count, dtype: int64
+Number of categories in extraction_type_group: 13
+Number of missing values in extraction_type_group: 0
+
+------- Exploring Value Counts for extraction_type_class -------
+extraction_type_class
+gravity         26780
+handpump        16456
+other            6430
+submersible      6179
+motorpump        2987
+rope pump         451
+wind-powered      117
+Name: count, dtype: int64
+Number of categories in extraction_type_class: 7
+Number of missing values in extraction_type_class: 0
+
+------- Exploring Value Counts for management -------
+management
+vwc                 40507
+wug                  6515
+water board          2933
+wua                  2535
+private operator     1971
+parastatal           1768
+water authority       904
+other                 844
+company               685
+unknown               561
+other - school         99
+trust                  78
+Name: count, dtype: int64
+Number of categories in management: 12
+Number of missing values in management: 0
+
+------- Exploring Value Counts for management_group -------
+management_group
+user-group    52490
+commercial     3638
+parastatal     1768
+other           943
+unknown         561
+Name: count, dtype: int64
+Number of categories in management_group: 5
+Number of missing values in management_group: 0
+
+------- Exploring Value Counts for payment -------
+payment
+never pay                25348
+pay per bucket            8985
+pay monthly               8300
+unknown                   8157
+pay when scheme fails     3914
+pay annually              3642
+other                     1054
+Name: count, dtype: int64
+Number of categories in payment: 7
+Number of missing values in payment: 0
+
+------- Exploring Value Counts for payment_type -------
+payment_type
+never pay     25348
+per bucket     8985
+monthly        8300
+unknown        8157
+on failure     3914
+annually       3642
+other          1054
+Name: count, dtype: int64
+Number of categories in payment_type: 7
+Number of missing values in payment_type: 0
+
+------- Exploring Value Counts for quality_group -------
+quality_group
+good        50818
+salty        5195
+unknown      1876
+milky         804
+colored       490
+fluoride      217
+Name: count, dtype: int64
+Number of categories in quality_group: 6
+Number of missing values in quality_group: 0
+
+------- Exploring Value Counts for quantity -------
+quantity
+enough          33186
+insufficient    15129
+dry              6246
+seasonal         4050
+unknown           789
+Name: count, dtype: int64
+Number of categories in quantity: 5
+Number of missing values in quantity: 0
+
+------- Exploring Value Counts for quantity_group -------
+quantity_group
+enough          33186
+insufficient    15129
+dry              6246
+seasonal         4050
+unknown           789
+Name: count, dtype: int64
+Number of categories in quantity_group: 5
+Number of missing values in quantity_group: 0
+
+------- Exploring Value Counts for source_type -------
+source_type
+spring                  17021
+shallow well            16824
+borehole                11949
+river/lake              10377
+rainwater harvesting     2295
+dam                       656
+other                     278
+Name: count, dtype: int64
+Number of categories in source_type: 7
+Number of missing values in source_type: 0
+
+------- Exploring Value Counts for source_class -------
+source_class
+groundwater    45794
+surface        13328
+unknown          278
+Name: count, dtype: int64
+Number of categories in source_class: 3
+Number of missing values in source_class: 0
+
+------- Exploring Value Counts for waterpoint_type -------
+waterpoint_type
+communal standpipe             28522
+hand pump                      17488
+other                           6380
+communal standpipe multiple     6103
+improved spring                  784
+cattle trough                    116
+dam                                7
+Name: count, dtype: int64
+Number of categories in waterpoint_type: 7
+Number of missing values in waterpoint_type: 0
+
+------- Exploring Value Counts for decade -------
+decade
+Unknown    20709
+2000s      15330
+1990s       7678
+1980s       5578
+2010s       5161
+1970s       4406
+1960s        538
+Name: count, dtype: int64
+Number of categories in decade: 7
+Number of missing values in decade: 0
+
+-----------------DATA EXPLORATION COMPLETE------------------
+
+

@@ -17,7 +17,7 @@ def explore_data(features, labels):
     print_header("EXPLORING DATA", True)
     # explore_basic_stats(features, labels)
     explore_categorical_features(features, labels)
-    explore_numerical_features(features, labels)
+    # explore_numerical_features(features, labels)
     print_header("DATA EXPLORATION COMPLETE", False)
 
 def explore_categorical_features(features, labels):

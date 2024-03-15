@@ -3,9 +3,11 @@ import pandas as pd
 import logging
 import initializer as init
 from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.preprocessing import FunctionTransformer
 from sklearn.pipeline import make_pipeline
 from cleaner import clean_data
 from utils import print_header
+from data_exploration import explore_data
 
 SEED = 42
 
@@ -65,11 +67,16 @@ def main():
                                                      args.categorical_preprocessing,
                                                      args.numerical_preprocessing)
 
+    handle_sparse_transformer = FunctionTransformer(
+        lambda x: x.toarray() if hasattr(x, "toarray") else x,
+        accept_sparse=True,
+    )
+
     # best_params = get_best_hyperparams(x_train, y_train["status_group"], args.model_type, column_transformer)
 
     model = init.get_model(args.model_type, **{})
 
-    train_pipeline = make_pipeline(column_transformer, model)
+    train_pipeline = make_pipeline(column_transformer, handle_sparse_transformer, model)
 
     # Train the model by 5-fold cross-validation
     print_header("TRAINING MODEL", True,)

@@ -77,6 +77,8 @@ def remove_redundant_columns(train_data, test_data):
         "water_quality",
         "scheme_management",
         "extraction_type",
+        "payment",
+        "quantity",
     ]
 
     train_data = train_data.drop(columns=redundant_columns)
