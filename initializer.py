@@ -37,14 +37,14 @@ def get_column_transformer(train_data, cat_preprocessing, num_preprocessing):
             "lga",
             "region",
             "extraction_type_group",
-            "extraction_type_class",
-            "ward"
+            "extraction_type_class"
         ]
         ordinal_features = ["decade"]
         target_features = [
             "funder",
             "installer",
-            "subvillage"
+            "subvillage",
+            "ward"
         ]
         transformers.append(("one_hot", 
                              OneHotEncoder(handle_unknown="ignore"),
@@ -141,7 +141,7 @@ def get_model(model_type, **best_params):
     elif model_type == "HistGradientBoostingClassifier":
         return HistGradientBoostingClassifier(**best_params)
     elif model_type == "MLPClassifier":
-        return MLPClassifier(**best_params)
+        return MLPClassifier(max_iter=200, **best_params)
     else:
         raise ValueError(f"Invalid model type: {model_type}")
 

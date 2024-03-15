@@ -4,22 +4,26 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier,
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.neural_network import MLPClassifier
-
+from initializer import get_column_transformer
 
 SEED = 42
 TRIALS = 100
 x_train = None
+x_test = None
 y_train = None
-column_transformer = None
 
 def rf_objective(trial):
+    global x_train, x_test
+    num_encoder = trial.suggest_categorical('num_encoder', ['StandardScaler', 'Manual', 'None'])
+    cat_encoder = trial.suggest_categorical('cat_encoder', ['OneHotEncoder', 'OrdinalEncoder', 'TargetEncoder', 'Manual'])
     n_estimators = trial.suggest_int('n_estimators', 50, 400)
     max_depth = trial.suggest_int('max_depth', 5, 30)
     min_samples_split = trial.suggest_int('min_samples_split', 2, 20)
     min_samples_leaf = trial.suggest_int('min_samples_leaf', 1, 20)
     criterion = trial.suggest_categorical('criterion', ['gini', 'entropy', 'log_loss'])
     max_features = trial.suggest_categorical('max_features', ['sqrt', 'log2', None])
-    bootstrap = trial.suggest_categorical('bootstrap', [True, False])
+
+    column_transformer = get_column_transformer(x_train, cat_encoder, num_encoder)
 
     clf = RandomForestClassifier(
         n_estimators=n_estimators,
@@ -28,7 +32,6 @@ def rf_objective(trial):
         min_samples_leaf=min_samples_leaf,
         criterion=criterion,
         max_features=max_features,
-        bootstrap=bootstrap,
         random_state=SEED,
     )
 
@@ -40,6 +43,8 @@ def rf_objective(trial):
     return scores.mean()
 
 def lr_objective(trial):
+    num_encoder = trial.suggest_categorical('num_encoder', ['StandardScaler', 'Manual', 'None'])
+    cat_encoder = trial.suggest_categorical('cat_encoder', ['OneHotEncoder', 'OrdinalEncoder', 'TargetEncoder', 'Manual'])
     C = trial.suggest_float('C', 0.1, 10)
     class_weight = trial.suggest_categorical('class_weight', ['balanced', None])
     solver = trial.suggest_categorical('solver', ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'])
@@ -55,6 +60,8 @@ def lr_objective(trial):
         random_state=SEED,
     )
 
+    column_transformer = get_column_transformer(x_train, cat_encoder, num_encoder)
+
     train_pipeline = make_pipeline(column_transformer, clf)
 
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
@@ -63,6 +70,8 @@ def lr_objective(trial):
     return scores.mean()
 
 def gb_objective(trial):
+    num_encoder = trial.suggest_categorical('num_encoder', ['StandardScaler', 'Manual', 'None'])
+    cat_encoder = trial.suggest_categorical('cat_encoder', ['OneHotEncoder', 'OrdinalEncoder', 'TargetEncoder', 'Manual'])
     n_estimators = trial.suggest_int('n_estimators', 100, 1000)
     learning_rate = trial.suggest_float('learning_rate', 0.01, 0.2)
     max_depth = trial.suggest_int('max_depth', 3, 10)
@@ -82,6 +91,8 @@ def gb_objective(trial):
         random_state=SEED,
     )
 
+    column_transformer = get_column_transformer(x_train, cat_encoder, num_encoder)
+
     train_pipeline = make_pipeline(column_transformer, clf)
 
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
@@ -90,6 +101,8 @@ def gb_objective(trial):
     return scores.mean()
 
 def hist_gb_objective(trial):
+    num_encoder = trial.suggest_categorical('num_encoder', ['StandardScaler', 'Manual', 'None'])
+    cat_encoder = trial.suggest_categorical('cat_encoder', ['OneHotEncoder', 'OrdinalEncoder', 'TargetEncoder', 'Manual'])
     max_iter = trial.suggest_int('max_iter', 100, 1000)
     learning_rate = trial.suggest_float('learning_rate', 0.01, 0.2)
     max_depth = trial.suggest_int('max_depth', 3, 30)
@@ -107,6 +120,7 @@ def hist_gb_objective(trial):
         random_state=SEED,
     )
 
+    column_transformer = get_column_transformer(x_train, cat_encoder, num_encoder)
     train_pipeline = make_pipeline(column_transformer, clf)
 
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
@@ -115,6 +129,8 @@ def hist_gb_objective(trial):
     return scores.mean()
 
 def mlp_objective(trial):
+    num_encoder = trial.suggest_categorical('num_encoder', ['StandardScaler', 'Manual', 'None'])
+    cat_encoder = trial.suggest_categorical('cat_encoder', ['OneHotEncoder', 'OrdinalEncoder', 'TargetEncoder', 'Manual'])
     hidden_layer_sizes = trial.suggest_categorical('hidden_layer_sizes', [(100,), (100, 100), (100, 100, 100)])
     activation = trial.suggest_categorical('activation', ['identity', 'logistic', 'tanh', 'relu'])
     solver = trial.suggest_categorical('solver', ['lbfgs', 'sgd', 'adam'])
@@ -132,6 +148,7 @@ def mlp_objective(trial):
         random_state=SEED,
     )
 
+    column_transformer = get_column_transformer(x_train, cat_encoder, num_encoder)
     train_pipeline = make_pipeline(column_transformer, clf)
 
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
@@ -140,12 +157,11 @@ def mlp_objective(trial):
     return scores.mean()
 
 
-def get_best_hyperparams(x, y, model, transformer):
+def get_best_hyperparams(x, y, model):
     print("----------------- FINDING BEST HYPERPARAMETERS -----------------")
-    global x_train, y_train, column_transformer
+    global x_train, x_test, y_train, column_transformer
     x_train = x
     y_train = y
-    column_transformer = transformer
 
     study = optuna.create_study(
         direction="maximize",

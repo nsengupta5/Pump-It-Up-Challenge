@@ -6,7 +6,6 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.pipeline import make_pipeline
 from cleaner import clean_data
-from hpo import get_best_hyperparams
 from utils import print_header
 from data_exploration import explore_data
 
