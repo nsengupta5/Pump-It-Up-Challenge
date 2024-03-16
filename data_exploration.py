@@ -15,7 +15,7 @@ SIMILARITY_THRESHOLD = 95
 
 def explore_data(features, labels):
     print_header("EXPLORING DATA", True)
-    # explore_basic_stats(features, labels)
+    explore_basic_stats(features, labels)
     explore_categorical_features(features, labels)
     explore_numerical_features(features, labels)
     print_header("DATA EXPLORATION COMPLETE", False)
@@ -23,19 +23,18 @@ def explore_data(features, labels):
 def explore_categorical_features(features, labels):
     cat_features = features.select_dtypes(include=[object])
     explore_categorical_stats(cat_features)
-    # explore_high_cardinality_categories(cat_features)
-    # explore_feature_importance_categories(cat_features, labels)
-    # explore_subset_features(cat_features, labels)
+    explore_high_cardinality_categories(cat_features)
+    explore_feature_importance_categories(cat_features, labels)
+    explore_subset_features(cat_features, labels)
 
 def explore_numerical_features(features, labels):
     num_features = features.select_dtypes(include=[np.number])
     explore_numerical_stats(num_features)
-    # explore_feature_importance_numerical(num_features, labels)
-    # explore_geographical_data(features, labels)
+    explore_feature_importance_numerical(num_features, labels)
+    explore_geographical_data(features, labels)
 
 def explore_basic_stats(features, labels):
     print_header("Exploring Basic Stats", True)
-    # Print the basic stats for the numerical features
     print(features.head())
     print(features.info())
     print(features.describe())
@@ -52,10 +51,9 @@ def explore_labels(labels):
     print()
 
 def explore_high_cardinality_categories(cat_features):
-    # print("------- Exploring Categories -------")
-    np.set_printoptions(threshold=np.inf)
+    print_header("Exploring High Cardinality Categories", True)
 
-    high_cardinality_categories = ["funder", "installer"]
+    high_cardinality_categories = ["funder", "installer", "subvillage", "ward"]
 
     for col in high_cardinality_categories:
         # Print only the names of the first 100 most frequent funders
@@ -95,7 +93,6 @@ def explore_categorical_stats(cat_features):
 
 def explore_numerical_stats(num_features):
     print_header("Exploring Stats for Numerical Data", True)
-    # Print the basic stats for the numerical features
     for col in num_features.columns:
         print_header(f"Exploring Stats for {col}", True)
         df = num_features[col][num_features[col] != 0]
@@ -107,7 +104,6 @@ def explore_numerical_stats(num_features):
 
 def explore_geographical_data(features, labels):
     print_header("Exploring Geographical Data", True)
-    # Print the basic stats for the numerical features
     df = features[["id", "longitude", "latitude"]]
     df = df[df["longitude"] != 0]
     df = df[df["latitude"] != 0]

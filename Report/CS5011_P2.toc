@@ -11,11 +11,14 @@
 \contentsline {paragraph}{Imputing Missing Values}{4}{section*.6}%
 \contentsline {paragraph}{Fixing Formatting Issues}{4}{section*.7}%
 \contentsline {paragraph}{Limiting High Cardinality Features}{4}{section*.8}%
-\contentsline {paragraph}{Converting Datetime Features}{4}{section*.9}%
-\contentsline {subsubsection}{\numberline {2.1.2}Encoding the Data}{4}{subsubsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.2}Design Decisions}{4}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Evaluation}{4}{subsection.2.3}%
-\contentsline {section}{\numberline {3}Part 2}{4}{section.3}%
+\contentsline {paragraph}{Converting Datetime Features}{5}{section*.9}%
+\contentsline {subsubsection}{\numberline {2.1.2}Encoding the Data}{5}{subsubsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.2}Design Decisions}{5}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Evaluation}{5}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Part 2}{5}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Hyper-Parameter Optimization}{5}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Evaluation}{5}{subsection.3.2}%
-\contentsline {section}{\numberline {4}Conclusion}{5}{section.4}%
+\contentsline {subsubsection}{\numberline {3.1.1}Random Forest}{5}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Logistic Regression}{6}{subsubsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.2}Evaluation}{6}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Random Forest}{6}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Logistic Regression}{7}{subsubsection.3.2.2}%

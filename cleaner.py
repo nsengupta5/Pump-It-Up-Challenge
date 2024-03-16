@@ -3,6 +3,18 @@ import pandas as pd
 import numpy as np
 import json
 
+"""
+Clean the data for the training and test data
+
+args:
+    train_data: The training data
+    test_data: The test data
+    threshold: The threshold for high cardinality
+
+returns:
+    train_data: The cleaned training data
+    test_data: The cleaned test data
+"""
 def clean_data(train_data, test_data, threshold=0.95):
     print("----------------- CLEANING DATA -----------------")
     train_data, test_data = remove_irrelevant_columns(train_data, test_data)
@@ -20,6 +32,17 @@ def clean_data(train_data, test_data, threshold=0.95):
     print("----------------- DATA CLEANED -----------------\n")
     return train_data, test_data
 
+"""
+Remove irrelevant columns from the training and test data
+
+args:
+    train_data: The training data
+    test_data: The test data
+
+returns:
+    train_data: The training data with irrelevant columns removed
+    test_data: The test data with irrelevant columns removed
+"""
 def remove_irrelevant_columns(train_data, test_data):
     logging.info("Removing irrelevant columns")
 
@@ -37,6 +60,17 @@ def remove_irrelevant_columns(train_data, test_data):
     logging.info("Irrelevant columns removed")
     return train_data, test_data
 
+"""
+Remove columns that have a single value from the training and test data
+
+args:
+    train_data: The training data
+    test_data: The test data
+
+returns:
+    train_data: The training data with single value columns removed
+    test_data: The test data with single value columns removed
+"""
 def remove_single_value_columns(train_data, test_data):
     logging.info("Removing single value columns")
 
@@ -47,6 +81,17 @@ def remove_single_value_columns(train_data, test_data):
     logging.info("Single value columns removed")
     return train_data, test_data
 
+"""
+Convert the date columns to datetime and extract the day, month, and year
+
+args:
+    train_data: The training data
+    test_data: The test data
+
+returns:
+    train_data: The training data with date columns 
+    test_data: The test data with date columns 
+"""
 def convert_to_datetime(train_data, test_data):
     logging.info("Converting date columns to datetime")
     date_columns = ["date_recorded"]
@@ -66,6 +111,17 @@ def convert_to_datetime(train_data, test_data):
     logging.info("Date columns converted to datetime")
     return train_data, test_data
 
+"""
+Remove redundant columns from the training and test data
+
+args:
+    train_data: The training data
+    test_data: The test data
+
+returns:
+    train_data: The training data with redundant columns removed
+    test_data: The test data with redundant columns removed
+"""
 def remove_redundant_columns(train_data, test_data):
     logging.info("Removing redundant columns")
 
@@ -84,6 +140,17 @@ def remove_redundant_columns(train_data, test_data):
     logging.info("Redundant columns removed")
     return train_data, test_data
 
+"""
+Replace the construction year with decades
+
+args:
+    train_data: The training data
+    test_data: The test data
+
+returns:
+    train_data: The training data with construction year replaced with decades
+    test_data: The test data with construction year replaced with decades
+"""
 def replace_construction_year_with_decades(train_data, test_data):
     logging.info("Replacing construction year with decades")
 
@@ -101,6 +168,17 @@ def replace_construction_year_with_decades(train_data, test_data):
     logging.info("Construction year replaced with decades")
     return train_data, test_data
 
+"""
+Replace zero longitude with the mean longitude of the region
+
+args:
+    train_data: The training data
+    test_data: The test data
+
+returns:
+    train_data: The training data with zero longitude replaced
+    test_data: The test data with zero longitude replaced
+"""
 def replace_zero_longitude(train_data, test_data):
     logging.info("Replacing zero longitude")
 
@@ -121,6 +199,17 @@ def replace_zero_longitude(train_data, test_data):
     logging.info("Zero longitude replaced")
     return train_data, test_data
 
+"""
+Replace zero gps_height with the mean gps_height of the region
+
+args:
+    train_data: The training data
+    test_data: The test data
+
+returns:
+    train_data: The training data with zero gps_height replaced
+    test_data: The test data with zero gps_height replaced
+"""
 def replace_zero_gps_height(train_data, test_data):
     logging.info("Replacing zero gps_height")
 
@@ -140,6 +229,16 @@ def replace_zero_gps_height(train_data, test_data):
     logging.info("Zero gps_height replaced")
     return train_data, test_data
 
+"""
+Get the mean of the neighbours of the region
+
+args:
+    region: The region to get the neighbours for
+    region_means: The mean of the regions
+
+returns:
+    The mean of the neighbours
+"""
 def get_neighbour_mean(region, region_means):
     neighbours = []
     if region == "Dodoma":
@@ -157,6 +256,17 @@ def get_neighbour_mean(region, region_means):
     neighbour_means = region_means[neighbours]
     return neighbour_means.mean()
 
+"""
+Replace zero population with the mean population of the region
+
+args:
+    train_data: The training data
+    test_data: The test data
+
+returns:
+    train_data: The training data with zero population replaced
+    test_data: The test data with zero population replaced
+"""
 def replace_zero_population(train_data, test_data):
     logging.info("Replacing zero population")
 
@@ -176,6 +286,17 @@ def replace_zero_population(train_data, test_data):
     logging.info("Zero population replaced")
     return train_data, test_data
 
+"""
+Replace zero district_code with the median district_code of the region
+
+args:
+    train_data: The training data
+    test_data: The test data
+
+returns:
+    train_data: The training data with zero district_code replaced
+    test_data: The test data with zero district_code replaced
+"""
 def replace_zero_district_code(train_data, test_data):
     logging.info("Replacing zero district_code")
 
@@ -192,6 +313,17 @@ def replace_zero_district_code(train_data, test_data):
     logging.info("Zero district_code replaced")
     return train_data, test_data
 
+"""
+Fix formatting errors in the training and test data
+
+args:
+    train_data: The training data
+    test_data: The test data
+
+returns:
+    train_data: The training data with formatting errors fixed
+    test_data: The test data with formatting errors fixed
+"""
 def fix_formatting_errors(train_data, test_data):
     logging.info("Fixing formatting errors")
 
@@ -215,14 +347,24 @@ def fix_formatting_errors(train_data, test_data):
     logging.info("Formatting errors fixed")
     return train_data, test_data
 
+"""
+Limit the high cardinality of the training and test data
+
+args:
+    train_data: The training data
+    test_data: The test data
+    threshold: The threshold for retaining most frequent categories
+
+returns:
+    train_data: The training data with high cardinality limited
+    test_data: The test data with high cardinality limited
+"""
 def limit_high_cardinality(train_data, test_data, threshold):
     logging.info("Limiting high cardinality")
 
     high_cardinality_columns = ["funder", "installer", "subvillage", "ward"]
 
     for col in high_cardinality_columns:
-
-        print(f"{col}: {train_data[col].nunique()} unique values")
 
         # Find the top categories that cover the 'threshold' percentage of data points
         top_categories = train_data[col].value_counts(normalize=True).cumsum()
@@ -238,11 +380,20 @@ def limit_high_cardinality(train_data, test_data, threshold):
         train_data[col] = train_data[col].fillna("Unknown")
         test_data[col] = test_data[col].fillna("Unknown")
 
-        print(f"{col}: {train_data[col].nunique()} unique values")
-
     logging.info("High cardinality limited")
     return train_data, test_data
 
+"""
+Replace missing boolean values in the training and test data
+
+args:
+    train_data: The training data
+    test_data: The test data
+
+returns:
+    train_data: The training data with missing boolean values replaced
+    test_data: The test data with missing boolean values replaced
+"""
 def replace_missing_boolean_values(train_data, test_data):
     logging.info("Replacing missing boolean values")
     pd.set_option('future.no_silent_downcasting', True)

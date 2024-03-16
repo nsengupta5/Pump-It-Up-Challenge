@@ -1,10 +1,39 @@
 import argparse
 import logging
-from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, TargetEncoder, StandardScaler
+from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, TargetEncoder, StandardScaler, FunctionTransformer
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, HistGradientBoostingClassifier
 from sklearn.neural_network import MLPClassifier
+
+"""
+Get the transformers based on the preprocessing method
+
+args:
+    x_train: The training data
+    cat_preprocessing: The type of encoding method to use for categorical features
+    num_preprocessing: The type of scaling method to use for numerical features
+
+returns:
+    column_transformer: The column transformer for scaling and encoding
+    functional_transformer: The functional transformer for handling sparse matrices
+"""
+def get_transformers(x_train, cat_preprocessing, num_preprocessing):
+    column_transformer = get_column_transformer(x_train, cat_preprocessing, num_preprocessing)
+    functional_transformer = get_functional_transformer()
+    return column_transformer, functional_transformer
+
+"""
+Get the functional transformer for handling sparse matrices
+
+returns:
+    functional_transformer: The functional transformer for handling sparse matrices
+"""
+def get_functional_transformer():
+    return FunctionTransformer(
+        lambda x: x.toarray() if hasattr(x, "toarray") else x,
+        accept_sparse=True,
+    )
 
 """
 Get the column transformer based on the preprocessing method
@@ -141,7 +170,7 @@ def get_model(model_type, **best_params):
     elif model_type == "HistGradientBoostingClassifier":
         return HistGradientBoostingClassifier(**best_params)
     elif model_type == "MLPClassifier":
-        return MLPClassifier(max_iter=200, **best_params)
+        return MLPClassifier(**best_params)
     else:
         raise ValueError(f"Invalid model type: {model_type}")
 

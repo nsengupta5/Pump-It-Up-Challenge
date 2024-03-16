@@ -61,18 +61,13 @@ python3 part1.py <train-input-file> <train-labels-file> <test-input-file> <numer
 \noindent The values for each of the arguments are equivalent to that described in the assignment specification. However, one difference is that the \codeword{<numerical-preprocessing>} and \codeword{<categorical-preprocessing>} arguments now take in a \codeword{Manual} option, which allows features to be preprocessed based on the encoding that are most suitable for the model. 
 
 \section{Part 1}
-% Explain the various preprocessing steps you have done.
-% Which design decisions (parameters of preprocessing methods, hyper-parameters of ma-
-% chine learning models) you have to make while implementing this part? How did you
-% set them? To make it simple, you can start your analysis with the default setting, and
-% investigate a few hyper-parameters of one or two machine learning models of your choice
-% afterwards.
 In this section, I will detail the various preprocessing steps I took to prepare the data for the machine learning models, guided by a deep exploration of the dataset. I will also discuss the design decisions I made while implementing this part, including the parameters of the preprocessing methods and the hyper-parameters of the machine learning models.
 
 \subsection{Preprocessing Steps}
 Prior to implementing the machine learning models, I performed a number of preprocessing steps to clean and prepare the data for the models. These steps were guided by a deep exploration of the dataset, where I analyzed the distribution of the features, the relationships between the features, and other important characteristics of the dataset. In conjuction with the steps outlined below, I will also discuss my findings from the exploration that lead to the decisions I made.
 
 \subsubsection{Cleaning the Data}
+The following steps were taken to clean the data:
 
 \paragraph{Removing Irrelevant Features}
 The first step I took was to remove any features that were irrelevant to the prediction task. These features either did not directly contribute to the status of the water pumps or contained too many missing values. The features that were removed include:
@@ -104,8 +99,14 @@ There were a number of features that were redundant, meaning they contained the 
 \paragraph{Replacing Construction Year with Decades}
 The \codeword{construction_year} feature contained a large number of missing values, with 34.8\% of the values missing. To make the feature more informative, I decided to categorize the construction years into decades. This would allow the model to learn the relationship between the construction year and the status of the water pumps, without imputing values that might distort the underlying distribution of the data. The decades were defined from 1960s to the 2010s, with the missing values being replaced with the "Unknown" category.
 
+% TODO REDO
 \paragraph{Imputing Missing Values}
+When dealing with the categorical features, I replaced the missing values with the "Unknown" category. However, when it came to dealing with numerical features, a key consideration was whether to impute the missing values or to remove the rows with missing values. I decided to impute the missing values with the median of the feature based on the region. This decision was made after analyzing the distribution of the features and finding that the features contained a large number of outliers. Imputing the missing values with the median would be less sensitive to the outliers and would not distort the underlying distribution of the data.
+
+% TODO REDO
 \paragraph{Fixing Formatting Issues}
+When exploring the \codeword{funder} and \codeword{installer} features, I found that there were a large number of unique values that were the same but were formatted differently. For example, "Government Of Tanzania" and "Government of Tanzania" were the same entity but were formatted differently. To deal with this, I converted the values to lowercase and removed any leading/trailing whitespace. I then performed a fuzzy matching algorithm to identify the unique values that were the same but were formatted differently. I then replaced the values with the same unique value. This strategy reduced the number of unique values for each of the features, making the dataset more manageable.
+
 \paragraph{Limiting High Cardinality Features}
 There were a few features in the dataset, specifically \codeword{funder}, \codeword{installer}, \codework{subvillage} and \codeword{ward}, that contained a large number of unique values. Such high cardinality could pose challenges, as encoding these features could significantly increase the dimensionality of the dataset, potentially leading to issues like overfitting and increased computational demand. To address this, I set a threshold (95\%) that identifies the most frequent categories that cumulatively account for 95\% of the values in the feature. This threshold was determined through manual experimentation, but can be set through hyperparameter optimization. Through this strategy, I was able to reduce the number of dummy variables needed for encoding and makng the dataset size more manageable. The remaining categories were replaced with the "Other" category. Additionally, I also replaced the missing values with the "Unknown" category. This strategy resulted in the following reductions in the number of unique values for each of the features (after fixing formatting issues):
 
@@ -122,8 +123,9 @@ There were a few features in the dataset, specifically \codeword{funder}, \codew
 \caption{Reduction in Unique Values for High Cardinality Features}
 \end{table}
 
+% TODO REDO
 \paragraph{Converting Datetime Features}
-
+The
 
 \subsubsection{Encoding the Data}
 
@@ -131,16 +133,89 @@ There were a few features in the dataset, specifically \codeword{funder}, \codew
 
 \subsection{Evaluation}
 
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+\textbf{}              & SS + OHE & SS + Ord & SS + Target & PT + OHE & PT + Ord & PT + Target \\ \hline
+Random Forest          & 80.74\%  & 80.79\%  & 80.4\%      & 80.2\%   & 79.09\%  & 79.85\%     \\ \hline
+Logistic Regression    & 78.49\%  & 62.24\%  & 75.52\%     & 78.37\%  & 61.44\%  & 75.53\%     \\ \hline
+Gradient Boosting      & 75.96\%  & 75.16\%  & 77.53\%     & 75.71\%  & 74.56\%  & 74.56\%     \\ \hline
+Hist Gradient Boosting & 79.39\%  & 79.12\%  & 79.62\%     & 78.67\%  & 78.37\%  & 78.89\%     \\ \hline
+MLP                    & 77.59\%  & 53.36\%  & 78.16\%     & 77.54\%  & 54.33\%  & 77.7\%      \\ \hline
+\end{tabular}
+\end{table}
+
 \section{Part 2}
 % Analyse the results of your experiments based on the provided training set (via cross-
 % validation mechanism). Summarise the key insights and findings of your analysis.
 For this part of the practical, I utilized Optuna \cite{optuna_2019}, an automated hyper-parameter optimization (HPO) tool to find the best hyper-parameters for each of the models. In this section, I will detail my HPO process and analyze the results of the experiments.
 
+% TODO REDO
 \subsection{Hyper-Parameter Optimization}
+I decided to use Optuna to perform the hyper-parameter optimization for the Random Forest and Logistic Regression models. I chose Random Forest as from the previous part, it was the best performing model, and Logistic Regression as it is a simple model that can be used as a benchmark. I also wanted to see how HPO differs for different families of models. The hyper-parameters that I optimized for each of the models are detailed below.
+
+% TODO REDO
+\subsubsection{Random Forest}
+When running the study for the Random Forest model, I optimized the following hyper-parameters:
+
+\begin{itemize}
+  \item \codeword{n_estimators} The number of trees in the forest
+  \item \codeword{max_depth} The maximum depth of the tree
+  \item \codeword{min_samples_split} The minimum number of samples required to split an internal node
+  \item \codeword{min_samples_leaf} The minimum number of samples required to be at a leaf node
+  \item \codeword{max_features} The number of features to consider when looking for the best splits
+\end{itemize}
+
+% TODO REDO
+\subsubsection{Logistic Regression}
+When running the study for the Logistic Regression model, I optimized the following hyper-parameters:
+
+\begin{itemize}
+  \item \codeword{C} Inverse of regularization strength
+  \item \codeword{penalty} The norm used in the penalization
+  \item \codeword{solver} The algorithm to use in the optimization problem
+  \item \codeword{class_weight} Weights associated with classes in the form \{class\_label: weight\}
+  \item \codeword{tol} Maximum number of iterations taken for the solvers to converge
+  \item \codeword{max_iter} Maximum number of iterations taken for the solvers to converge
+\end{itemize}
 
 \subsection{Evaluation}
 
-\section{Conclusion}
+\subsubsection{Random Forest}
+When running the trials, I found that the most important hyper-parameters for the Random Forest model were \codeword{cat_encoder}, \codeword{max_depth}, and \codeword{max_features}. These parameters were the most influential in determining the performance of the model. 
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/random_forest_importance.png}
+  \caption{Feature Importance for Random Forest Model}
+\end{figure}
+
+\noindent In addition, the parallel coordinates plot for the Random Forest model for the most influential features is shown below.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/tmp.png}
+  \caption{Parallel Coordinates Plot for Random Forest Model}
+\end{figure}
+
+\subsubsection{Logistic Regression}
+When running the trials, I found that the most important hyper-parameters for the Logistic Regression model were \codeword{cat_encoder}, \codeword{solver}, and \codeword{class_weight}. These parameters were the most influential in determining the performance of the model.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/lr_importance.png}
+  \caption{Feature Importance for Logistic Regression Model}
+\end{figure}
+
+\noindent In addition, the parallel coordinates plot for the Logistic Regression model for the most iinfluencial features is shown below.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{img/tmp2.png}
+  \caption{Parallel Coordinates Plot for Logistic Regression Model}
+\end{figure}
+
+% \section{Conclusion}
 
 \printbibliography
 

@@ -5,8 +5,6 @@ import initializer as init
 from cleaner import clean_data
 from utils import print_header
 from hpo import get_best_hyperparams
-from data_exploration import explore_data
-from sklearn.preprocessing import FunctionTransformer
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.pipeline import make_pipeline
 
@@ -46,6 +44,8 @@ args:
 """
 def write_predictions(output_file, predictions):
     logging.info(f"Writing the predictions to {output_file}")
+    # add the header to the predictions
+    predictions = np.vstack((["id", "status_group"], predictions))
     np.savetxt(output_file, predictions, delimiter=",", fmt="%s")
     logging.info("Predictions written successfully")
 
@@ -62,31 +62,34 @@ def main():
     x_test_id = x_test["id"]
     x_train, x_test = clean_data(x_train, x_test)
 
-    explore_data(x_train, y_train)
-
-    column_transformer = init.get_column_transformer(x_train, 
+    column_transformer, functional_transformer = init.get_transformers(x_train, 
                                                      args.categorical_preprocessing,
                                                      args.numerical_preprocessing)
 
-    handle_sparse_transformer = FunctionTransformer(
-        lambda x: x.toarray() if hasattr(x, "toarray") else x,
-        accept_sparse=True,
-    )
+    best_params = get_best_hyperparams(x_train, 
+                                       y_train["status_group"],
+                                       args.model_type)
 
-    best_params = get_best_hyperparams(x_train, y_train["status_group"], args.model_type)
-
-    # Remove the num_encoder and cat_encoder from the best_params dictionary
+    # Remove the num_encoder and cat_encoder so we are not passing
+    # them as parameters to the model
     best_params.pop("num_encoder")
     best_params.pop("cat_encoder")
 
+    # Use the best hyperparameters to initialize the model
     model = init.get_model(args.model_type, **best_params)
 
-    train_pipeline = make_pipeline(column_transformer, handle_sparse_transformer, model)
+    train_pipeline = make_pipeline(column_transformer,
+                                   functional_transformer,
+                                   model)
 
     # Train the model by 5-fold cross-validation
     print_header("TRAINING MODEL", True,)
     skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
-    scores = cross_val_score(train_pipeline, x_train, y_train["status_group"], cv=skf, scoring='accuracy')
+    scores = cross_val_score(train_pipeline,
+                             x_train,
+                             y_train["status_group"],
+                             cv=skf,
+                             scoring='accuracy')
 
     # Print the mean and standard deviation of the cross-validated accuracy
     print(f"Cross-validated accuracy: {np.mean(scores)} Â± {np.std(scores)}")
