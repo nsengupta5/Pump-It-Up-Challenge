@@ -2,6 +2,7 @@ import logging
 import pandas as pd
 import numpy as np
 import json
+from utils import print_header
 
 """
 Clean the data for the training and test data
@@ -16,7 +17,7 @@ returns:
     test_data: The cleaned test data
 """
 def clean_data(train_data, test_data, threshold=0.95):
-    print("----------------- CLEANING DATA -----------------")
+    print_header("CLEANING DATA", True)
     train_data, test_data = remove_irrelevant_columns(train_data, test_data)
     train_data, test_data = remove_single_value_columns(train_data, test_data)
     train_data, test_data = remove_redundant_columns(train_data, test_data)
@@ -29,7 +30,7 @@ def clean_data(train_data, test_data, threshold=0.95):
     train_data, test_data = limit_high_cardinality(train_data, test_data, threshold=threshold)
     train_data, test_data = replace_missing_boolean_values(train_data, test_data)
     train_data, test_data = convert_to_datetime(train_data, test_data)
-    print("----------------- DATA CLEANED -----------------\n")
+    print_header("DATA CLEANED", False)
     return train_data, test_data
 
 """

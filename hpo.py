@@ -4,6 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from initializer import get_column_transformer
+from utils import print_header
 
 SEED = 42
 TRIALS = 100
@@ -97,7 +98,7 @@ def lr_objective(trial):
     return scores.mean()
 
 def get_best_hyperparams(x, y, model, run_optuna=False):
-    print("----------------- FINDING BEST HYPERPARAMETERS -----------------")
+    print_header("FINDNG BEST HYPERPARAMETERS", True)
     global x_train, y_train, column_transformer
     x_train = x
     y_train = y
@@ -119,6 +120,6 @@ def get_best_hyperparams(x, y, model, run_optuna=False):
             raise ValueError(f"Invalid model type: {model}")
 
     print(f"Best hyperparameters: {study.best_params}")
-    print("----------------- BEST HYPERPARAMETERS FOUND -----------------\n")
+    print_header("BEST HYPERPARAMETERS FOUND", False)
 
     return study.best_params
