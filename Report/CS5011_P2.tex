@@ -241,6 +241,8 @@ Default & n\_esimators & max\_depth & max\_features \\ \hline
 
 \subsubsection{HistGradientBoostingClassifier with Parameter Setting}
 
+Below are the results of the HistGradientBoostingClassifier model with different hyper-parameters using Standard Scaling and TargetEncoder, which is shown in Table 6.
+
 \begin{table}[H]
   \centering
   \begin{tabular}{|c|c|c|}
@@ -251,6 +253,8 @@ Default & n\_esimators & max\_depth & max\_features \\ \hline
   \caption{Results of HistGradientBoostingClassifier with different hyper-parameters using Standard Scaling and TargetEncoder}
 \end{table}
 
+\noindent One notable observation from these results is lowering the learning rate to 0.05 from 0.1 actually decreases the model's performance. While this is unexpected, one possible explanation is that the learning rate is too low, causing the model to learn more slowly and not converge to the best solution. A future experiment could be to increase the number of iterations to see if the model's performance improves. 
+
 \section{Part 2}
 % Analyse the results of your experiments based on the provided training set (via cross-
 % validation mechanism). Summarise the key insights and findings of your analysis.
@@ -260,34 +264,31 @@ For this part of the practical, I utilized Optuna \cite{optuna_2019}, an automat
 \subsection{Hyper-Parameter Optimization}
 I decided to use Optuna to perform the hyper-parameter optimization for the Random Forest and Logistic Regression models. I chose Random Forest as from the previous part, it was the best performing model, and Logistic Regression as it is a simple model that can be used as a benchmark. I also wanted to see how HPO differs for different families of models. The hyper-parameters that I optimized for each of the models are detailed below.
 
-% TODO REDO
-\subsubsection{Random Forest}
-When running the study for the Random Forest model, I optimized the following hyper-parameters:
+\subsubsection{Experimental Setup}
+To conduct HPO, I first defined the search space for each of the models. For each model, I did some research to get a preliminary understanding of what the most important hyper-parameters are, and then defined the search space based on this information. For Random Forest, the following hyper-parameters were identified as the most influential \cite{Thorn_2021}:
 
 \begin{itemize}
   \item \codeword{n_estimators} The number of trees in the forest
   \item \codeword{max_depth} The maximum depth of the tree
-  \item \codeword{min_samples_split} The minimum number of samples required to split an internal node
+  \item \codeword{min_samples_split}  The minimum number of samples required to split an internal node
   \item \codeword{min_samples_leaf} The minimum number of samples required to be at a leaf node
-  \item \codeword{max_features} The number of features to consider when looking for the best splits
+  \item \codeword{max_features} The number of features to consider when deciding upon a split
 \end{itemize}
 
-% TODO REDO
-\subsubsection{Logistic Regression}
-When running the study for the Logistic Regression model, I optimized the following hyper-parameters:
+\noindent Similarly, for Logistic Regression, the following hyper-parameters were identified as the most influential \cite{Brownlee_2020}:
 
 \begin{itemize}
   \item \codeword{C} Inverse of regularization strength
   \item \codeword{penalty} The norm used in the penalization
   \item \codeword{solver} The algorithm to use in the optimization problem
-  \item \codeword{class_weight} Weights associated with classes in the form \{class\_label: weight\}
+  \item \codeword{class_weight} Weights associated with classes 
   \item \codeword{tol} Maximum number of iterations taken for the solvers to converge
   \item \codeword{max_iter} Maximum number of iterations taken for the solvers to converge
 \end{itemize}
 
+\noindent Along with the model parameter search space, I also decided to include the preprocessing encodings as part of the search space. While the results in the previous part showed the optimal encodings for both these models, I wanted to ensure that the HPO process could find the best encodings for the models. Additionally, I wanted to see if having the \codeword{Manual} encoding for both numerical and categorical features as part of the search space would lead to better results. Stratifed 5-fold cross-validation was used to evaluate the performance of each model, and the best hyper-parameters were selected based on the highest accuracy. Values in the search space were modified appropriately with experimentation to ensure that the search space was not too large, which could lead to long runtimes, or too small, which could lead to suboptimal results. Optuna then used the TPE (Tree-structured Parzen Estimator) algorithm to sample the search space and find the best hyper-parameters for each model \cite{optuna_2019}.
+
 \subsection{Evaluation}
-
-
 
 \subsubsection{Random Forest}
 When running the trials, I found that the most important hyper-parameters for the Random Forest model were \codeword{cat_encoder}, \codeword{max_depth}, and \codeword{max_features}. These parameters were the most influential in determining the performance of the model. 
@@ -315,7 +316,7 @@ When running the trials, I found that the most important hyper-parameters for th
   \caption{Feature Importance for Logistic Regression Model}
 \end{figure}
 
-\noindent In addition, the parallel coordinates plot for the Logistic Regression model for the most iinfluencial features is shown below.
+\noindent In addition, the parallel coordinates plot for the Logistic Regression model for the most influencial features is shown below.
 
 \begin{figure}[H]
   \centering

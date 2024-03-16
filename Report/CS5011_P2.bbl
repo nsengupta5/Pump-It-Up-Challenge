@@ -72,6 +72,67 @@
       \field{title}{Optuna: A Next-generation Hyperparameter Optimization Framework}
       \field{year}{2019}
     \endentry
+    \entry{Thorn_2021}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=0670125b55dd77e8bbe6635275b35170}{%
+           family={Thorn},
+           familyi={T\bibinitperiod},
+           given={James},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Towards Data Science}%
+      }
+      \strng{namehash}{0670125b55dd77e8bbe6635275b35170}
+      \strng{fullhash}{0670125b55dd77e8bbe6635275b35170}
+      \strng{bibnamehash}{0670125b55dd77e8bbe6635275b35170}
+      \strng{authorbibnamehash}{0670125b55dd77e8bbe6635275b35170}
+      \strng{authornamehash}{0670125b55dd77e8bbe6635275b35170}
+      \strng{authorfullhash}{0670125b55dd77e8bbe6635275b35170}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Medium}
+      \field{month}{9}
+      \field{title}{Random Forest: Hyperparameters and how to fine-tune them}
+      \field{year}{2021}
+      \verb{urlraw}
+      \verb https://towardsdatascience.com/random-forest-hyperparameters-and-how-to-fine-tune-them-17aee785ee0d
+      \endverb
+      \verb{url}
+      \verb https://towardsdatascience.com/random-forest-hyperparameters-and-how-to-fine-tune-them-17aee785ee0d
+      \endverb
+    \endentry
+    \entry{Brownlee_2020}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=915af163e2107106fced5dd3164d9a8e}{%
+           family={Brownlee},
+           familyi={B\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{fullhash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{bibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorbibnamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authornamehash}{915af163e2107106fced5dd3164d9a8e}
+      \strng{authorfullhash}{915af163e2107106fced5dd3164d9a8e}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{MachineLearningMastery.com}
+      \field{month}{8}
+      \field{title}{Tune hyperparameters for Classification Machine Learning Algorithms}
+      \field{year}{2020}
+      \verb{urlraw}
+      \verb https://machinelearningmastery.com/hyperparameters-for-classification-machine-learning-algorithms/
+      \endverb
+      \verb{url}
+      \verb https://machinelearningmastery.com/hyperparameters-for-classification-machine-learning-algorithms/
+      \endverb
+    \endentry
   \enddatalist
 \endrefsection
 \endinput

@@ -2363,6 +2363,9 @@
   <bcf:section number="0">
     <bcf:citekey order="1" intorder="1">DrivenData</bcf:citekey>
     <bcf:citekey order="2" intorder="1">optuna_2019</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">Thorn_2021</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">Brownlee_2020</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">optuna_2019</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

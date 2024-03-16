@@ -1,11 +1,11 @@
 \contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Project Achievements}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.1}Project Achievements}{1}{subsection.1.1}%
 \contentsline {subsection}{\numberline {1.2}Usage Instructions}{2}{subsection.1.2}%
 \contentsline {section}{\numberline {2}Part 1}{2}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Preprocessing Steps}{2}{subsection.2.1}%
 \contentsline {subsubsection}{\numberline {2.1.1}Cleaning the Data}{2}{subsubsection.2.1.1}%
 \contentsline {paragraph}{Removing Irrelevant Features}{2}{section*.2}%
-\contentsline {paragraph}{Removing Single-Value Features}{3}{section*.3}%
+\contentsline {paragraph}{Removing Single-Value Features}{2}{section*.3}%
 \contentsline {paragraph}{Removing Redundant Features}{3}{section*.4}%
 \contentsline {paragraph}{Replacing Construction Year with Decades}{4}{section*.5}%
 \contentsline {paragraph}{Imputing Missing Values}{4}{section*.6}%
@@ -19,8 +19,8 @@
 \contentsline {paragraph}{Random Forest}{6}{section*.14}%
 \contentsline {paragraph}{HistGradientBoostingClassifier}{7}{section*.15}%
 \contentsline {subsection}{\numberline {2.3}Evaluation}{7}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {2.3.1}General Observations}{8}{subsubsection.2.3.1}%
-\contentsline {paragraph}{Random Forest}{8}{section*.17}%
+\contentsline {subsubsection}{\numberline {2.3.1}General Observations}{7}{subsubsection.2.3.1}%
+\contentsline {paragraph}{Random Forest}{7}{section*.17}%
 \contentsline {paragraph}{Logistic Regression}{8}{section*.18}%
 \contentsline {paragraph}{Gradient Boosting Classifier}{8}{section*.19}%
 \contentsline {paragraph}{HistGradientBoostingClassifier}{8}{section*.20}%
@@ -29,8 +29,7 @@
 \contentsline {subsubsection}{\numberline {2.3.3}HistGradientBoostingClassifier with Parameter Setting}{9}{subsubsection.2.3.3}%
 \contentsline {section}{\numberline {3}Part 2}{9}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Hyper-Parameter Optimization}{9}{subsection.3.1}%
-\contentsline {subsubsection}{\numberline {3.1.1}Random Forest}{9}{subsubsection.3.1.1}%
-\contentsline {subsubsection}{\numberline {3.1.2}Logistic Regression}{10}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.1}Experimental Setup}{9}{subsubsection.3.1.1}%
 \contentsline {subsection}{\numberline {3.2}Evaluation}{10}{subsection.3.2}%
 \contentsline {subsubsection}{\numberline {3.2.1}Random Forest}{10}{subsubsection.3.2.1}%
 \contentsline {subsubsection}{\numberline {3.2.2}Logistic Regression}{11}{subsubsection.3.2.2}%
