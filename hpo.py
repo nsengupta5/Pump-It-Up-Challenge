@@ -96,7 +96,7 @@ def lr_objective(trial):
 
     return scores.mean()
 
-def get_best_hyperparams(x, y, model):
+def get_best_hyperparams(x, y, model, run_optuna=False):
     print("----------------- FINDING BEST HYPERPARAMETERS -----------------")
     global x_train, y_train, column_transformer
     x_train = x
@@ -110,19 +110,13 @@ def get_best_hyperparams(x, y, model):
         load_if_exists=True,
     )
 
-    # Commented out as best hyperparameters have been found
-    # if model == "RandomForestClassifier":
-    #     study.optimize(rf_objective, n_trials=TRIALS)
-    # elif model == "LogisticRegression":
-    #     study.optimize(lr_objective, n_trials=TRIALS)
-    # elif model == "GradientBoostingClassifier":
-    #     study.optimize(gb_objective, n_trials=TRIALS)
-    # elif model == "HistGradientBoostingClassifier":
-    #     study.optimize(hist_gb_objective, n_trials=TRIALS)
-    # elif model == "MLPClassifier":
-    #     study.optimize(mlp_objective, n_trials=TRIALS)
-    # else:
-    #     raise ValueError(f"Invalid model type: {model}")
+    if run_optuna:
+        if model == "RandomForestClassifier":
+            study.optimize(rf_objective, n_trials=TRIALS)
+        elif model == "LogisticRegression":
+            study.optimize(lr_objective, n_trials=TRIALS)
+        else:
+            raise ValueError(f"Invalid model type: {model}")
 
     print(f"Best hyperparameters: {study.best_params}")
     print("----------------- BEST HYPERPARAMETERS FOUND -----------------\n")
