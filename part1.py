@@ -76,31 +76,31 @@ def main():
     best_params = get_best_hyperparams(x_train, y_train["status_group"], args.model_type)
 
     # Remove the num_encoder and cat_encoder from the best_params dictionary
-    # best_params.pop("num_encoder")
-    # best_params.pop("cat_encoder")
+    best_params.pop("num_encoder")
+    best_params.pop("cat_encoder")
 
-    # model = init.get_model(args.model_type, **best_params)
+    model = init.get_model(args.model_type, **best_params)
 
-    # train_pipeline = make_pipeline(column_transformer, handle_sparse_transformer, model)
+    train_pipeline = make_pipeline(column_transformer, handle_sparse_transformer, model)
 
-    # # Train the model by 5-fold cross-validation
-    # print_header("TRAINING MODEL", True,)
-    # skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
-    # scores = cross_val_score(train_pipeline, x_train, y_train["status_group"], cv=skf, scoring='accuracy')
+    # Train the model by 5-fold cross-validation
+    print_header("TRAINING MODEL", True,)
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
+    scores = cross_val_score(train_pipeline, x_train, y_train["status_group"], cv=skf, scoring='accuracy')
 
-    # # Print the mean and standard deviation of the cross-validated accuracy
-    # print(f"Cross-validated accuracy: {np.mean(scores)} Â± {np.std(scores)}")
-    # print_header("MODEL TRAINED", False)
+    # Print the mean and standard deviation of the cross-validated accuracy
+    print(f"Cross-validated accuracy: {np.mean(scores)} Â± {np.std(scores)}")
+    print_header("MODEL TRAINED", False)
 
-    # # Make predictions on the test data
-    # print_header("MAKING PREDICTIONS", True)
-    # train_pipeline.fit(x_train, y_train["status_group"])
-    # predictions = train_pipeline.predict(x_test)
+    # Make predictions on the test data
+    print_header("MAKING PREDICTIONS", True)
+    train_pipeline.fit(x_train, y_train["status_group"])
+    predictions = train_pipeline.predict(x_test)
 
-    # # Append id from test data to the predictions
-    # predictions = np.column_stack((x_test_id, predictions))
-    # write_predictions(args.test_prediction_output_file, predictions)
-    # print_header("PREDICTIONS MADE", False)
+    # Append id from test data to the predictions
+    predictions = np.column_stack((x_test_id, predictions))
+    write_predictions(args.test_prediction_output_file, predictions)
+    print_header("PREDICTIONS MADE", False)
 
 if __name__ == "__main__":
     main()
