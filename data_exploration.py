@@ -30,8 +30,33 @@ def explore_categorical_features(features, labels):
 def explore_numerical_features(features, labels):
     num_features = features.select_dtypes(include=[np.number])
     explore_numerical_stats(num_features)
+    plot_date_vs_target(features, labels)
     explore_feature_importance_numerical(num_features, labels)
     explore_geographical_data(features, labels)
+    missing_values_corr_with_region(features)
+
+def missing_values_corr_with_region(features):
+    missing_features = ["longitude", "district_code", "gps_height", "population"]
+    for feature in missing_features:
+        show_corr(features, feature, "region")
+
+def plot_date_vs_target(features, labels):
+    df = pd.concat([features, labels], axis=1)
+
+    sns.countplot(x="year_recorded", hue="status_group", data=df)
+    plt.title("Year vs Status Group")
+    plt.savefig("plots/year-vs-status_group.png")
+    plt.clf()
+
+    sns.countplot(x="month_recorded", hue="status_group", data=df)
+    plt.title("Month vs Status Group")
+    plt.savefig("plots/month-vs-status_group.png")
+    plt.clf()
+
+    sns.countplot(x="day_recorded", hue="status_group", data=df)
+    plt.title("Day vs Status Group")
+    plt.savefig("plots/day-vs-status_group.png")
+    plt.clf()
 
 def explore_basic_stats(features, labels):
     print_header("Exploring Basic Stats", True)
@@ -210,4 +235,4 @@ def show_corr(df, feature, general):
     print_header(f"Correlation for {feature} and {general}", True)
     contingency_table = pd.crosstab(df[feature], df[general])
     chi2, p, dof, _ = chi2_contingency(contingency_table)
-    print(f"Chi2: {chi2}, p: {p:.5f}, dof: {dof}")
+    print(f"Chi2: {chi2}, p: {p:.5}, dof: {dof}")
