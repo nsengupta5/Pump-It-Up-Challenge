@@ -44,7 +44,7 @@ args:
 """
 def write_predictions(output_file, predictions):
     logging.info(f"Writing the predictions to {output_file}")
-    # add the header to the predictions
+    # Add the header to the predictions
     predictions = np.vstack((["id", "status_group"], predictions))
     np.savetxt(output_file, predictions, delimiter=",", fmt="%s")
     logging.info("Predictions written successfully")
