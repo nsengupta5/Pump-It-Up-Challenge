@@ -8,7 +8,7 @@ This project predicts the functionality of water pumps across Tanzania using Sci
 - Hist Gradient Boosting Classifier
 - MLPClassifier
 
-The project achieved an accuracy of 82.36%, ranking in the top 10% of worldwide submissions for the competition. 
+The project achieved an accuracy of 82.36% with the tuned RandomForestClassifier, ranking in the top 10% of worldwide submissions for the competition. 
 
 ## Instructions
 
